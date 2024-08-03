@@ -87,6 +87,6 @@ body.light-mode pre {
 }
 
 body.light-mode #darkModeToggle {
-    background-color: #3498db;
+    background-color: #ee9545;/*#3498db;*/
     color: #fff;
 }
