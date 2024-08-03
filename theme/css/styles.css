@@ -64,8 +64,8 @@ body:not(.light-mode) code[class*="language-"] {
 /* Prism overrides for light mode */
 body.light-mode pre[class*="language-"],
 body.light-mode code[class*="language-"] {
-    background: #f4f4f4;
-    color: #333;
+    background: #2d2d2d;
+    color: #ccc;
 }
 
 #darkModeToggle {
