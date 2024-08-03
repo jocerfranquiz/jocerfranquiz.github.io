@@ -14,14 +14,20 @@ body.light-mode {
     background-color: #e5e5e5;
 }
 
-h1, h2 {
-    color: #e29040;
+h1, h2, #subtitle, hgroup {
     font-family: Sono, Arial, sans-serif;
+    color: #e29040;
 }
 
 body.light-mode h1,
-body.light-mode h2 {
+body.light-mode h2,
+body.light-mode #subtitle,
+body.light-mode hgroup {
     color: #2c3e50;
+}
+
+#subtitle {
+    color: #ee9545;
 }
 
 #copyright {
@@ -31,24 +37,13 @@ body.light-mode h2 {
     margin-right: auto;
 }
 
-#subtitle {
-  color: #ee9545;
-  font-family: Sono, Arial, sans-serif;
-}
-
 a {
     text-decoration: none;
-} 
+}
 
-/* visited link color */
 a:visited {
-    color:#ef2222;
+    color: #ef2222;
     text-decoration: none;
-} 
-
-hgroup {
-  color: #ee9545;
-  font-family: Sono, Arial, sans-serif;
 }
 
 pre {
@@ -58,7 +53,6 @@ pre {
     padding: 10px;
     overflow-x: auto;
 }
-
 
 /* Prism overrides for dark mode */
 body:not(.light-mode) pre[class*="language-"],
@@ -70,15 +64,10 @@ body:not(.light-mode) code[class*="language-"] {
 /* Prism overrides for light mode */
 body.light-mode pre[class*="language-"],
 body.light-mode code[class*="language-"] {
-    background: #2d2d2d;
-    color: #ccc;
+    background: #f4f4f4;
+    color: #333;
 }
-/*
-body.light-mode pre {
-    background-color: #f4f4f4;
-    border-color: #ddd;
-}
-*/
+
 #darkModeToggle {
     background-color: #f0f0f0;
     color: #222;
@@ -89,9 +78,10 @@ body.light-mode pre {
     position: absolute;
     top: 20px;
     right: 20px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 body.light-mode #darkModeToggle {
-    background-color: #ee9545/*#3498db;*/
+    background-color: #ee9545;
     color: #fff;
 }
