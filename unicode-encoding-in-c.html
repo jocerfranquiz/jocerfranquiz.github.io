@@ -29,13 +29,12 @@
                 
         </header>
         <p>This blog post will dive deep into the intricacies of printing Unicode characters in C, with a special focus on the fire emoji (U+1F525) as our running example.</p>
-<h2>The Fire Emoji U+1F525</h2>
-<p>Let's start our journey with the fire emoji 🔥, represented by the Unicode code point U+1F525.</p>
-<h2>History of Unicode and UTF-8</h2>
-<p>To appreciate the significance of Unicode, we need to understand its history. Before Unicode, various encoding systems were used for different languages and regions, leading to compatibility issues and confusion.</p>
+<h2>Really short history of Unicode and UTF-8</h2>
+<p>Before Unicode, various encoding systems were used for different languages and regions, leading to compatibility issues and confusion.</p>
 <p>Unicode was developed in the late 1980s and early 1990s as a universal character encoding standard. Its goal was to provide a unique number for every character, regardless of platform, program, or language. This ambitious project aimed to unify all the world's writing systems under one standard.</p>
 <p>UTF-8, created by Ken Thompson and Rob Pike in 1992, is a variable-width encoding that can represent every character in the Unicode standard. It has become the dominant encoding for the World Wide Web and is backward compatible with ASCII.</p>
 <h2>Byte Representation</h2>
+<p>Let's start our journey with the fire emoji 🔥, represented by the Unicode code point U+1F525.</p>
 <p>In UTF-8, the fire emoji (U+1F525) is represented by four bytes: <code>F0 9F 94 A5</code>. Let's break this down:</p>
 <ol>
 <li><code>F0</code>: Indicates the start of a 4-byte sequence in UTF-8</li>
@@ -43,7 +42,7 @@
 <li><code>94</code>: Continuation byte</li>
 <li><code>A5</code>: Final continuation byte</li>
 </ol>
-<p>This sequence encodes the code point <code>0x1F525</code>code> in UTF-8 format.</p>
+<p>This sequence encodes the code point <code>0x1F525</code> in UTF-8 format.</p>
 <h2>Why <code>printf "\xF0\x9F\x94\xA5\n"</code> is 🔥</h2>
 <p>When you use the command <code>printf "\xF0\x9F\x94\xA5\n"</code> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji. Here's why it works:</p>
 <ol>
