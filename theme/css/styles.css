@@ -16,7 +16,7 @@ body.light-mode {
 
 h1, h2 {
     color: #e29040;
-    font-family: Sono;
+    font-family: Sono, Arial, sans-serif;
 }
 
 body.light-mode h1,
@@ -35,6 +35,10 @@ body.light-mode h2 {
   color: #ee9545;
   font-family: Sono, Arial, sans-serif;
 }
+
+a {
+    text-decoration: none;
+} 
 
 /* visited link color */
 a:visited {
