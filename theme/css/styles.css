@@ -39,6 +39,7 @@ body.light-mode hgroup {
 
 a {
     text-decoration: none;
+    color: #ee9545;
 }
 
 a:visited {
