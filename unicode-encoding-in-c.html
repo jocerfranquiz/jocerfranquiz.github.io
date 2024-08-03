@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+            <title>HCF.LOL - Unicode encoding in C</title>
+        <meta charset="UTF-8">
+        <meta name="generator" content="Pelican" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="description" content="Halt & Catch Fire is all about flipping bits..." />
+            <link rel="stylesheet" type="text/css" href="theme/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="theme/css/prism.css">
+
+
+
+
+</head>
+<body>
+    <header>
+      <hgroup><h1><a href="/" style="color: #ee9545">HCF.LOL</a></h1><div id="subtitle"><em>Halt & Catch Fire is all about flipping bits...</em></div></hgroup>
+        <button id="darkModeToggle">Light Mode</button>
+        <nav>
+            <ul>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    <article>
+        <header>
+                <h2>
+                    <a href="/unicode-encoding-in-c.html" rel="bookmark"
+                        title="Permalink to Unicode encoding in C">Unicode encoding in C
+                    </a>
+                </h2>
+                
+        </header>
+        <p>Unicode has revolutionized the way we represent and process text in computing.
+For C programmers, understanding how to work with Unicode, particularly UTF-8 encoding,
+is crucial for developing internationalized applications.
+This blog post will dive deep into the intricacies of printing Unicode characters in C, with a special focus on the fire emoji (U+1F525) as our running example.</p>
+<h2>The Fire Emoji U+1F525</h2>
+<p>Let's start our journey with the fire emoji 🔥, represented by the Unicode code point U+1F525. This vibrant symbol has become a staple in digital communication, often used to express excitement, success, or something trendy.</p>
+<h2>History of Unicode and UTF-8</h2>
+<p>To appreciate the significance of Unicode, we need to understand its history. Before Unicode, various encoding systems were used for different languages and regions, leading to compatibility issues and confusion.</p>
+<p>Unicode was developed in the late 1980s and early 1990s as a universal character encoding standard. Its goal was to provide a unique number for every character, regardless of platform, program, or language. This ambitious project aimed to unify all the world's writing systems under one standard.</p>
+<p>UTF-8, created by Ken Thompson and Rob Pike in 1992, is a variable-width encoding that can represent every character in the Unicode standard. It has become the dominant encoding for the World Wide Web and is backward compatible with ASCII.</p>
+<h2>Byte Representation</h2>
+<p>In UTF-8, the fire emoji (U+1F525) is represented by four bytes: F0 9F 94 A5. Let's break this down:</p>
+<ol>
+<li>F0: Indicates the start of a 4-byte sequence in UTF-8</li>
+<li>9F: Continuation byte</li>
+<li>94: Continuation byte</li>
+<li>A5: Final continuation byte</li>
+</ol>
+<p>This sequence encodes the code point 0x1F525 in UTF-8 format.</p>
+<h2>Why <code>printf "\xF0\x9F\x94\xA5\n"</code> is 🔥</h2>
+<p>When you use the command <code>printf "\xF0\x9F\x94\xA5\n"</code> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji. Here's why it works:</p>
+<ol>
+<li><code>\x</code> is an escape sequence in C-style strings that allows you to specify a byte using its hexadecimal value.</li>
+<li><code>\xF0\x9F\x94\xA5</code> represents the four bytes of the UTF-8 encoded fire emoji.</li>
+<li>The terminal, if configured to use UTF-8, interprets these bytes as the fire emoji and displays it accordingly.</li>
+<li><code>\n</code> adds a newline character at the end.</li>
+</ol>
+<p>This method works because you're bypassing the C compiler and directly instructing the terminal to output specific byte values, which it then interprets as UTF-8.</p>
+<h2>Printing Unicode UTF-8 in C</h2>
+<p>When working with Unicode in C, we need to be more explicit about our intentions. C was developed before Unicode, so it doesn't have built-in support for wide character sets. However, we can still work with UTF-8 encoded strings.</p>
+<h2>Magical Encoding in 5 Byte Buffer</h2>
+<p>To encode a Unicode code point into UTF-8, we can use a 5-byte buffer. Why 5 bytes? Because:</p>
+<ol>
+<li>The maximum number of bytes needed for a UTF-8 encoded character is 4.</li>
+<li>We need an extra byte for the null terminator ('\0') to mark the end of the string in C.</li>
+</ol>
+<p>Here's a simple function to demonstrate this encoding:</p>
+<pre><code class="language-c match-braces line-numbers">
+void encode_utf8(uint32_t codepoint, char buffer[5]) {
+    if (codepoint <= 0x7F) {
+        buffer[0] = codepoint;
+        buffer[1] = '\0';
+    } else if (codepoint <= 0x7FF) {
+        buffer[0] = 0xC0 | (codepoint >> 6);
+        buffer[1] = 0x80 | (codepoint & 0x3F);
+        buffer[2] = '\0';
+    } else if (codepoint <= 0xFFFF) {
+        buffer[0] = 0xE0 | (codepoint >> 12);
+        buffer[1] = 0x80 | ((codepoint >> 6) & 0x3F);
+        buffer[2] = 0x80 | (codepoint & 0x3F);
+        buffer[3] = '\0';
+    } else if (codepoint <= 0x10FFFF) {
+        buffer[0] = 0xF0 | (codepoint >> 18);
+        buffer[1] = 0x80 | ((codepoint >> 12) & 0x3F);
+        buffer[2] = 0x80 | ((codepoint >> 6) & 0x3F);
+        buffer[3] = 0x80 | (codepoint & 0x3F);
+        buffer[4] = '\0';
+    } else {
+        // Invalid codepoint
+        buffer[0] = '\0';
+    }
+}
+</code></pre>
+
+<p>This function takes a Unicode code point and encodes it into UTF-8 in the provided buffer.</p>
+<h2>The ASCII Case</h2>
+<p>ASCII characters (0-127) are a subset of UTF-8 and are encoded using a single byte. In our encoding function, this is handled by the first condition:</p>
+<pre><code class="language-c match-braces line-numbers">
+if (codepoint <= 0x7F) {
+    buffer[0] = codepoint;
+    buffer[1] = '\0';
+}
+</code></pre>
+
+<p>This simplicity is one of the reasons UTF-8 gained widespread adoption – it's fully compatible with ASCII.</p>
+<h2>The Surrogate Pairs for UTF-16</h2>
+<p>UTF-16, another Unicode encoding, uses surrogate pairs to represent code points above U+FFFF. These are code points in the range U+D800 to U+DFFF. In UTF-8, we don't use surrogate pairs, but we need to be aware of them to avoid encoding invalid sequences.</p>
+<p>In our encoding function, we should add a check for surrogate pairs:</p>
+<pre><code class="language-c match-braces line-numbers">
+if (codepoint >= 0xD800 && codepoint <= 0xDFFF) {
+    // Invalid codepoint, use replacement character
+    encode_utf8(0xFFFD, buffer);
+    return;
+}
+</code></pre>
+
+<h2>The Replacement Character U+FFFD</h2>
+<p>The replacement character � (U+FFFD) is used to indicate problems when rendering or displaying text. It's commonly used when an unknown, unrecognized, or unrepresentable character is encountered.</p>
+<p>In our encoding function, we can use this character when we encounter invalid code points:</p>
+<pre><code class="language-c match-braces line-numbers">
+if (codepoint > 0x10FFFF) {
+    // Invalid codepoint, use replacement character
+    encode_utf8(0xFFFD, buffer);
+    return;
+}
+</code></pre>
+
+<h2>Putting All Together</h2>
+<p>Now, let's look at a complete implementation that handles all these cases:</p>
+<pre><code class="language-c match-braces line-numbers">
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+char* codepoint_to_utf8(uint32_t codepoint, char buffer[5]) {
+    // UTF-8 can encode Unicode codepoints in the range 0x0 to 0x10FFFF
+    // We'll use the replacement character U+FFFD for any invalid input
+
+    if (codepoint <= 0x7F) {
+        // 1-byte sequence: ASCII codepoints 0-127
+        // Format: 0xxxxxxx
+        buffer[0] = (char)codepoint;
+        buffer[1] = '\0';
+    } else if (codepoint <= 0x7FF) {
+        // 2-byte sequence
+        // Format: 110xxxxx 10xxxxxx
+        buffer[0] = (char)(0xC0 | (codepoint >> 6));
+        buffer[1] = (char)(0x80 | (codepoint & 0x3F));
+        buffer[2] = '\0';
+    } else if (codepoint <= 0xFFFF) {
+        // Check for surrogate pair range (U+D800 to U+DFFF)
+        // These are reserved for UTF-16 and invalid in UTF-8
+        if (codepoint >= 0xD800 && codepoint <= 0xDFFF) {
+            // Use replacement character U+FFFD
+            return codepoint_to_utf8(0xFFFD, buffer);
+        }
+        // 3-byte sequence
+        // Format: 1110xxxx 10xxxxxx 10xxxxxx
+        buffer[0] = (char)(0xE0 | (codepoint >> 12));
+        buffer[1] = (char)(0x80 | ((codepoint >> 6) & 0x3F));
+        buffer[2] = (char)(0x80 | (codepoint & 0x3F));
+        buffer[3] = '\0';
+    } else if (codepoint <= 0x10FFFF) {
+        // 4-byte sequence
+        // Format: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+        buffer[0] = (char)(0xF0 | (codepoint >> 18));
+        buffer[1] = (char)(0x80 | ((codepoint >> 12) & 0x3F));
+        buffer[2] = (char)(0x80 | ((codepoint >> 6) & 0x3F));
+        buffer[3] = (char)(0x80 | (codepoint & 0x3F));
+        buffer[4] = '\0';
+    } else {
+        // Invalid codepoint (above U+10FFFF)
+        // Use replacement character U+FFFD
+        return codepoint_to_utf8(0xFFFD, buffer);
+    }
+
+    return buffer;
+}
+
+int main() {
+    // Test cases including edge cases and invalid inputs
+    uint32_t test_cases[] = {
+        0x24,       // U+0024 DOLLAR SIGN
+        0xA3,       // U+00A3 POUND SIGN
+        0x939,      // U+0939 DEVANAGARI LETTER HA
+        0xD800,     // Invalid: surrogate pair
+        0x1F525,    // U+1F525 FIRE EMOJI
+        0x10FFFF,   // Highest valid codepoint
+        0x110000    // Invalid: above U+10FFFF
+    };
+    int num_cases = sizeof(test_cases) / sizeof(test_cases[0]);
+    char utf8_buffer[5];
+
+    for (int i = 0; i < num_cases; i++) {
+        uint32_t codepoint = test_cases[i];
+        codepoint_to_utf8(codepoint, utf8_buffer);
+
+        printf("UTF-8 for U+%X: ", codepoint);
+
+        // Print each byte in hexadecimal
+        for (int j = 0; utf8_buffer[j] != '\0'; j++) {
+            printf("%02X ", (unsigned char)utf8_buffer[j]);
+        }
+
+        printf("(");
+        // Print the actual UTF-8 string
+        printf("%s", utf8_buffer);
+        printf(")\n");
+    }
+
+    return 0;
+}
+</code></pre>
+
+<p>This code demonstrates how to handle various Unicode code points, including edge cases and invalid inputs. It correctly encodes ASCII characters, multi-byte sequences, and handles surrogate pairs and out-of-range code points by using the replacement character.</p>
+<h2>TL;DR</h2>
+<p>Printing Unicode characters in C requires understanding UTF-8 encoding. Here are the key points:</p>
+<ol>
+<li>Unicode assigns a unique number (code point) to every character.</li>
+<li>UTF-8 is a variable-width encoding that can represent all Unicode code points.</li>
+<li>In C, we can encode Unicode code points into UTF-8 using bitwise operations.</li>
+<li>ASCII characters (0-127) are encoded as single bytes in UTF-8.</li>
+<li>Multi-byte sequences in UTF-8 follow a specific pattern with leading and continuation bytes.</li>
+<li>Surrogate pairs (U+D800 to U+DFFF) are invalid in UTF-8 and should be replaced.</li>
+<li>The replacement character (U+FFFD) is used for invalid or unrepresentable code points.</li>
+<li>A 5-byte buffer is sufficient to encode any valid Unicode code point in UTF-8 (4 bytes max + null terminator).</li>
+</ol>
+<hr>
+<p><strong>Next post...</strong> <em>Building games on the terminal with C</em></p>
+        <footer>
+            <p>Published: <time datetime="2024-08-01T00:00:00-04:00">
+                Thu 01 August 2024
+                </time>
+            </p>
+        </footer>
+    </article>
+    </main>
+    <footer>
+      <div id="copyright"> <p>&copy; 2024 Jocer Franquiz. All rights reserved.</p></div>
+    </footer>
+    <script src="theme/js/script.js"></script>
+    <script src="theme/js/prism.js"></script>
+</body>
+</html>
