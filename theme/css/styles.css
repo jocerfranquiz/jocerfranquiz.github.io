@@ -33,16 +33,18 @@ body.light-mode h2 {
 
 #subtitle {
   color: #ee9545;
-  font-family: Sono;
+  font-family: Sono, Arial, sans-serif;
 }
 
-a {
-  text-decoration: none;
-}
+/* visited link color */
+a:visited {
+    color:#ef2222;
+    text-decoration: none;
+} 
 
 hgroup {
   color: #ee9545;
-  font-family: Sono;
+  font-family: Sono, Arial, sans-serif;
 }
 
 pre {
@@ -53,7 +55,6 @@ pre {
     overflow-x: auto;
 }
 
-a:visited {color:#ef2222;} /* visited link color */
 
 /* Prism overrides for dark mode */
 body:not(.light-mode) pre[class*="language-"],
@@ -87,6 +88,6 @@ body.light-mode pre {
 }
 
 body.light-mode #darkModeToggle {
-    background-color: #ee9545;/*#3498db;*/
+    background-color: #ee9545/*#3498db;*/
     color: #fff;
 }
