@@ -43,22 +43,22 @@
 <li><strong>A5</strong>: Final continuation byte</li>
 </ul>
 <p>This sequence encodes the code point <code>0x1F525</code> in UTF-8 format.</p>
-<h2>Why <code>printf "\xF0\x9F\x94\xA5\n"</code> is 🔥?</h2>
-<p>When you use the command <strong><code>printf "\xF0\x9F\x94\xA5\n"</code></strong> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji. Here's why it works:</p>
-<ol>
+<h2>Printing emojis with <strong><code>printf</code></strong> is ?</h2>
+<p>When we use the bash command <strong><code>printf "\xF0\x9F\x94\xA5\n"</code></strong> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji 🔥. Here's why it works:</p>
+<ul>
 <li><strong><code>\x</code></strong> is an escape sequence in C-style strings that allows you to specify a byte using its hexadecimal value.</li>
 <li><strong><code>\xF0\x9F\x94\xA5</code></strong> represents the four bytes of the UTF-8 encoded fire emoji.</li>
 <li>The terminal, if configured to use UTF-8, interprets these bytes as the fire emoji and displays it.</li>
 <li><strong><code>\n</code></strong> adds a newline character at the end.</li>
-</ol>
-<p>This method works because you're bypassing the C compiler and directly instructing the terminal to output specific byte values, which it then interprets as UTF-8.</p>
-<h2>Printing Unicode UTF-8 in C</h2>
+</ul>
+<p>This method works because we are directly instructing the terminal to output specific byte values, which it then interprets as UTF-8.</p>
+<h2>Printing Unicode UTF-8 with C</h2>
 <p>When working with Unicode in C, we need to be more explicit about our intentions. C was developed before Unicode, so it doesn't have built-in support for wide character sets. However, we can still work with UTF-8 encoded strings.</p>
 <p>To encode a Unicode code point into UTF-8, we can use a 5-byte buffer. Why 5 bytes? Because:</p>
-<ol>
+<ul>
 <li>The maximum number of bytes needed for a UTF-8 encoded character is 4.</li>
 <li>We need an extra byte for the null terminator <strong><code>'\0'</code></strong> to mark the end of the string in C.</li>
-</ol>
+</ul>
 <p>Here's a simple function to demonstrate this encoding:</p>
 <pre><code class="language-c match-braces line-numbers">void encode_utf8(uint32_t codepoint, char buffer[5]) {
     if (codepoint <= 0x7F) {
