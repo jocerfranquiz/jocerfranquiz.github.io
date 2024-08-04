@@ -36,29 +36,28 @@
 <h2>Byte Representation</h2>
 <p>Let's start our journey with the fire emoji 🔥, represented by the Unicode code point U+1F525.</p>
 <p>In UTF-8, the fire emoji (U+1F525) is represented by four bytes: <code>F0 9F 94 A5</code>. Let's break this down:</p>
-<ol>
-<li><code>F0</code>: Indicates the start of a 4-byte sequence in UTF-8</li>
-<li><code>9F</code>: Continuation byte</li>
-<li><code>94</code>: Continuation byte</li>
-<li><code>A5</code>: Final continuation byte</li>
-</ol>
+<ul>
+<li><strong>F0</strong>: Indicates the start of a 4-byte sequence in UTF-8</li>
+<li><strong>9F</strong>: Continuation byte</li>
+<li><strong>94</strong>: Continuation byte</li>
+<li><strong>A5</strong>: Final continuation byte</li>
+</ul>
 <p>This sequence encodes the code point <code>0x1F525</code> in UTF-8 format.</p>
-<h2>Why <code>printf "\xF0\x9F\x94\xA5\n"</code> is 🔥</h2>
-<p>When you use the command <code>printf "\xF0\x9F\x94\xA5\n"</code> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji. Here's why it works:</p>
+<h2>Why <code>printf "\xF0\x9F\x94\xA5\n"</code> is 🔥?</h2>
+<p>When you use the command <strong><code>printf "\xF0\x9F\x94\xA5\n"</code></strong> in a Unix-like terminal, you're directly printing the UTF-8 byte sequence for the fire emoji. Here's why it works:</p>
 <ol>
-<li><code>\x</code> is an escape sequence in C-style strings that allows you to specify a byte using its hexadecimal value.</li>
-<li><code>\xF0\x9F\x94\xA5</code> represents the four bytes of the UTF-8 encoded fire emoji.</li>
+<li><strong><code>\x</code></strong> is an escape sequence in C-style strings that allows you to specify a byte using its hexadecimal value.</li>
+<li><strong><code>\xF0\x9F\x94\xA5</code></strong> represents the four bytes of the UTF-8 encoded fire emoji.</li>
 <li>The terminal, if configured to use UTF-8, interprets these bytes as the fire emoji and displays it.</li>
-<li><code>\n</code> adds a newline character at the end.</li>
+<li><strong><code>\n</code></strong> adds a newline character at the end.</li>
 </ol>
 <p>This method works because you're bypassing the C compiler and directly instructing the terminal to output specific byte values, which it then interprets as UTF-8.</p>
 <h2>Printing Unicode UTF-8 in C</h2>
 <p>When working with Unicode in C, we need to be more explicit about our intentions. C was developed before Unicode, so it doesn't have built-in support for wide character sets. However, we can still work with UTF-8 encoded strings.</p>
-<h2>Magical Encoding in 5 Byte Buffer</h2>
 <p>To encode a Unicode code point into UTF-8, we can use a 5-byte buffer. Why 5 bytes? Because:</p>
 <ol>
 <li>The maximum number of bytes needed for a UTF-8 encoded character is 4.</li>
-<li>We need an extra byte for the null terminator <code>'\0'</code>code> to mark the end of the string in C.</li>
+<li>We need an extra byte for the null terminator <strong><code>'\0'</code></strong> to mark the end of the string in C.</li>
 </ol>
 <p>Here's a simple function to demonstrate this encoding:</p>
 <pre><code class="language-c match-braces line-numbers">void encode_utf8(uint32_t codepoint, char buffer[5]) {
@@ -115,9 +114,9 @@
 
 <h2>Putting All Together</h2>
 <p>Now, let's look at a complete implementation that handles all these cases:</p>
-<pre><code class="language-c match-braces line-numbers">#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
+<pre><code class="language-c match-braces line-numbers">#include "stdio.h"
+#include "stdint.h"
+#include "string.h"
 
 char* codepoint_to_utf8(uint32_t codepoint, char buffer[5]) {
     // UTF-8 can encode Unicode codepoints in the range 0x0 to 0x10FFFF
@@ -164,6 +163,36 @@ char* codepoint_to_utf8(uint32_t codepoint, char buffer[5]) {
     return buffer;
 }
 
+void print_sokoban_map(const char* map[], int height, int width) {
+    char utf8_buffer[5];
+
+    // Define Unicode codepoints for Sokoban elements
+    const uint32_t WALL = 0x1f332;  //0x1F9F1;      // Full block
+    const uint32_t PLAYER = 0x1F6B6;   // Person walking
+    const uint32_t BOX = 0x1F4E6;      // Package
+    const uint32_t TARGET = 0x1F6A9;    // Black large circle
+    const uint32_t FLOOR = 0x3000;     // Middle dot
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            uint32_t codepoint;
+            switch (map[y][x]) {
+                case '#': codepoint = WALL; break;
+                case '@': codepoint = PLAYER; break;
+                case '$': codepoint = BOX; break;
+                case '.': codepoint = TARGET; break;
+                case ' ': codepoint = FLOOR; break;
+                default: codepoint = FLOOR; break;
+            }
+
+            codepoint_to_utf8(codepoint, utf8_buffer);
+            printf("%s", utf8_buffer);
+
+        }
+        printf("\n");
+    }
+}
+
 int main() {
     // Test cases including edge cases and invalid inputs
     uint32_t test_cases[] = {
@@ -194,6 +223,27 @@ int main() {
         printf("%s", utf8_buffer);
         printf(")\n");
     }
+
+    printf("\n\n\n");
+
+    const char* sokoban_map[] = {
+        "    #####          ",
+        "    #   #          ",
+        "    #$  #          ",
+        "  ###  $##         ",
+        "  #  $ $ #         ",
+        "### # ## #   ######",
+        "#   # ## #####  ..#",
+        "# $  $          ..#",
+        "##### ### #@##  ..#",
+        "    #     #########",
+        "    #######        "
+    };
+
+    int height = sizeof(sokoban_map) / sizeof(sokoban_map[0]);
+    int width = strlen(sokoban_map[0]);
+
+    print_sokoban_map(sokoban_map, height, width);
 
     return 0;
 }</code></pre>
