@@ -1,0 +1,24 @@
+# Temporary files created by Vim
+*~
+*.swp
+*.swo
+*.backup
+
+# Temporary files often created by text editors
+*.tmp
+*.bak
+*.orig
+
+# Logs
+*.log
+
+# Packages and build results (if this were a larger project)
+# node_modules/
+# venv/
+# .venv/
+# dist/
+# build/
+# *.pyc
+# *.o
+# *.exe
+
