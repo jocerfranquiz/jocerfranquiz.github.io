@@ -30,65 +30,73 @@
     <!-- KATEX -->
     <title>locus communis</title>
     <style>
-      body {
-        background-color: #a2adb3; /* bluish gray */
-        color: black;
-        font-family: sans-serif;
-        display: flex;
-        flex-direction: column; /* Arrange items vertically */
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-      }
+        body {
+            background-color: #333;
+            color: #eee;
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Arrange items vertically */
+            min-height: 100vh;
+        }
 
-      header {
-        margin-bottom: 20px;
-        text-align: center;
-      }
+        header {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.6em;
+        }
 
-      header a {
-        color: #555;
-      }
+        .social-links {
+            margin-top: 15px;
+        }
 
-      .social-links {
-        margin-top: 15px;
-      }
+        .social-links a {
+            margin: 0 10px;
+            color: #a7b3d6;
+            text-decoration: none;
+        }
 
-      .social-links a {
-        margin: 0 10px;
-        color: #333;
-        text-decoration: none;
-      }
+        .social-links a:hover {
+            text-decoration: underline;
+        }
 
-      .social-links a:hover {
-        text-decoration: underline;
-      }
+        div {
+            max-width: 80ch; /* approximately 80 characters wide */
+            padding: 20px;
+            text-align: left; /* or text-align: justify; */
+        }
 
-      div {
-        max-width: 80ch; /* approximately 80 characters wide */
-        padding: 20px;
-        text-align: left; /* or text-align: justify; */
-      }
+        footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            text-align: center;
+        }
 
-      footer {
-        margin-top: 20px;
-        font-size: 0.8em;
-        color: #555;
-        text-align: center;
-      }
 
-      footer a {
-        color: #555;
-      }
-      .intro-snippet, .chapter-intro {
-        margin-bottom: 1em;
-        font-style:
-        italic;
-      }
-      ol { margin-left: 2em; }
-      li { margin-bottom: 0.5em; }
-      .chapter { margin-bottom: 2.5em; }
+        a {
+            color: #98a8d8; /* A soft blue for default links */
+            text-decoration: none; /* Optional: Removes the default underline */
+        }
+
+        a:visited {
+            color: #98a8d8; /* A light, desaturated blue-gray for visited links */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .intro-snippet, .chapter-intro {
+            margin-bottom: 1em;
+            font-style:
+            italic;
+        }
+        ol { margin-left: 2em; }
+        li { margin-bottom: 0.5em; }
+        .chapter { margin-bottom: 2.5em; }
     </style>
   </head>
   <body>
@@ -100,12 +108,12 @@
       <p>Building a database category engine in Python from scratch!</p>
 
       <div class="intro-snippet">
-          <p>Coders! data wranglers! and Python &#38; SQL wizards! Ever feel like you're wrestling with data complexity, schema migrations, or ETL pipelines that feel... brittle? What if I told you there's a branch of abstract math, that offers a surprisingly powerful lens to understand and <em>design</em> better data systems? Forget dusty theorems for a moment.</p>
+          <p>Coders! data wranglers! and Python &#38; SQL developers! Ever feel like you're wrestling with data complexity, schema migrations, or ETL pipelines that feel... brittle? What if I told you there's a branch of abstract math, that offers a surprisingly powerful lens to understand and <em>design</em> better data systems? Forget dusty theorems for a moment.</p>
           <p>We're going on a practical journey, inspired by the work of <b>David I. Spivak</b>, to see how thinking in terms of objects, arrows, and compositions can make us (not) wrong about databases. We'll use <code>Python</code> and <code>SQLite</code>, reconnecting to concepts you already know, and build up intuition step-by-step. Ready to level up your thinking about data?</p>
       </div>
 
       <div class="chapter">
-          <h2>1. Let's build a category in Python in 2 minutes! [Tomorrow 2025-04-26]</h2>
+          <h2>1. Let's build a category in Python in 2 minutes! [Tomorrow 2025-04-28]</h2>
           <p class="chapter-intro">Forget the abstract definitions for a second. What if we could represent the <em>essence</em> of a category with just a few lines of Python? This chapter is about getting our hands dirty immediately, showing you that the core concepts aren't scary and can be coded faster than you can brew coffee.</p>
           <ol>
               <li><strong>What are we even talking about? Objects and Arrows:</strong> A super-quick, intuitive intro to the two fundamental building blocks. Think nodes and edges, but more general.</li>

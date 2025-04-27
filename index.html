@@ -3,23 +3,25 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>locus communis</title>
+    <title>{locus: communis}</title>
     <style>
       body {
-        background-color: #a2adb3; /* bluish gray */
-        color: black;
-        font-family: sans-serif;
-        display: flex;
-        flex-direction: column; /* Arrange items vertically */
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
+          background-color: #333;
+          color: #eee;
+          font-family: monospace;
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column; /* Arrange items vertically */
+          min-height: 100vh;
       }
 
       header {
-        margin-bottom: 20px;
-        text-align: center;
+          margin-bottom: 20px;
+          text-align: center;
+          font-size: 1.6em;
       }
 
       .social-links {
@@ -28,7 +30,7 @@
 
       .social-links a {
         margin: 0 10px;
-        color: #333;
+        color: #a7b3d6;
         text-decoration: none;
       }
 
@@ -45,33 +47,45 @@
       footer {
         margin-top: 20px;
         font-size: 0.8em;
-        color: #555;
         text-align: center;
       }
 
-      footer a {
-        color: #555;
+
+      a {
+          color: #98a8d8; /* A soft blue for default links */
+          text-decoration: none; /* Optional: Removes the default underline */
+      }
+
+      a:visited {
+          color: #98a8d8; /* A light, desaturated blue-gray for visited links */
+      }
+
+      a:hover {
+          text-decoration: underline;
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>locus communis</h1>
+      <h1>{locus: communis}</h1>
     </header>
     <div>
       <h1>Hello, there!</h1>
       <p>This is my <b>locus communis</b>.</p>
-      <p> From <a href="https://en.wikipedia.org/wiki/Commonplace_book#:~:text=%22Commonplace%22%20is%20a%20translation%20of,a%20statement%20of%20proverbial%20wisdom.">Wikipedia</a>:
+      <p> From <a href="https://en.wikipedia.org/wiki/Commonplace_book#:~:text=%22Commonplace%22%20is%20a%20translation%20of,a%20statement%20of%20proverbial%20wisdom." target="_blank">Wikipedia</a>:
         "Commonplace book" is at times used with an expansive sense,
         referring to collections by an individual in one volume which have
         a common theme...
       </p>
+
+      <p>Try my Python editor <a href="editor.html">here!</a>. It's based on <a href="https://pyodide.org/en/stable/index.html">Pyodide</a>
+      interpreter.</p>
     </div>
     <div>
       <h2><a href="./program.html">We are (not) wrong about databases!</a></h2>
       <p>Building a database category engine in Python from scratch!</p>
       <div>
-          <p>Coders! data wranglers! and Python &#38; SQL wizards! Ever feel like you're wrestling with data complexity, schema migrations, or ETL pipelines that feel... brittle? What if I told you there's a branch of abstract math, that offers a surprisingly powerful lens to understand and <em>design</em> better data systems? Forget dusty theorems for a moment.</p>
+          <p>Coders! data wranglers! and Python &#38; SQL devs! Ever feel like you're wrestling with data complexity, schema migrations, or ETL pipelines that feel... brittle? What if I told you there's a branch of abstract math, that offers a surprisingly powerful lens to understand and <em>design</em> better data systems? Forget dusty theorems for a moment.</p>
           <p>We're going on a practical journey, inspired by the work of <b>David I. Spivak</b>, to see how thinking in terms of objects, arrows, and compositions can make us (not) wrong about databases. We'll use <code>Python</code> and <code>SQLite</code>, reconnecting to concepts you already know, and build up intuition step-by-step. Ready to level up your thinking about data?</p>
       </div>
     </div>
