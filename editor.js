@@ -17,14 +17,21 @@ function addToOutput(message) {
     outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll
 }
 
+// Function to replace the previous message and display a new one
+function displayNewMessage(newMessage) {
+    outputElement.textContent = newMessage;
+    outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll to the bottom in case the new message is long
+}
+
 async function main() {
+    displayNewMessage(`Loading... Please wait...`);
     try {
         // Pyodide is loaded via its deferred script tag now,
         // but the `loadPyodide` function becomes globally available.
         // We still need to call it to initialize the instance.
         pyodide = await loadPyodide();
 
-        addToOutput(`Pyodide ${pyodide.version}\n`);
+        displayNewMessage(`Pyodide ${pyodide.version}\n`);
         addToOutput(`Running Python ${pyodide.runPython("import sys; sys.version.split(' ')[0]")} 🐍\n\n`);
         // CodeMirror library is loaded via its deferred script tag.
         codeEditor = CodeMirror.fromTextArea(codeTextArea, {

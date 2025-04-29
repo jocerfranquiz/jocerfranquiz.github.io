@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"> <title>{python: editor}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>" rel="icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js" defer></script>
+
+    <script src="editor.js" defer></script>
+
+    <style>
+      body {
+          background-color: #333;
+          color: #eee;
+          font-family: monospace;
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column; /* Arrange items vertically */
+      }
+
+      header {
+          margin-bottom: 20px;
+          text-align: center;
+          font-size: 1.6em;
+      }
+
+      #code-container {
+          height: 300px;
+          width: 100%;
+          border: 1px solid #666;
+          margin-bottom: 10px;
+          position: relative;
+          max-width: 82ch;
+      }
+
+      #output {
+          height: 150px;
+          width: 100%;
+          border: 1px solid #666;
+          background-color: #222;
+          color: #eee;
+          padding: 5px;
+          overflow-y: auto;
+          white-space: pre-wrap;
+          box-sizing: border-box;
+          max-width: 82ch;
+      }
+
+      button {
+          background-color: #eee;
+          border: none;
+          padding: 10px 20px;
+          text-align: center;
+          display: inline-block;
+          font-size: 1.4em;
+          margin-bottom: 10px;
+          cursor: pointer;
+          font-family: monospace;
+      }
+
+      button:disabled {
+          background-color: #555;
+          cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1><a href="./index.html">locus communis</a></h1>
+    </header>
+
+    <h2>python editor</h2>
+
+    <div id="code-container">
+      <label for="code"></label><textarea id="code" style="display: none;">
+# Insert your Python code here, then click run!
+
+print("Hello, there!")</textarea>
+    </div>
+
+    <button id="run" disabled><strong>run</strong></button>
+    <pre id="output"></pre>
+    <footer>
+      <p>&copy; 2025 Jocer Franquiz</p>
+    </footer>
+  </body>
+</html>
