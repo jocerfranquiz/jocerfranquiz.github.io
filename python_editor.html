@@ -1,198 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pyodide in HTML</title>
-  <link href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>" rel="icon">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/material-darker.min.css">
-  <style>
-      body {
-          background-color: #333;
-          color: #eee;
-          font-family: monospace;
-          display: flex;
-          flex-direction: column;
-          height: 100vh;
-          margin: 0;
-      }
-      #code-container {
-          flex-grow: 1;
-          margin-bottom: 10px;
-      }
-      #code {
-          display: none; /* Hide the textarea */
-          height: 100%;
-      }
-      .CodeMirror {
-          height: 100% !important;
-      }
-      #output-container {
-          height: 30%;
-          flex-shrink: 0;
-          border: 1px solid #666;
-          margin-bottom: 10px;
-          overflow-y: auto;
-          padding: 10px;
-          background-color: #222;
-      }
-      #output {
-          white-space: pre-wrap;
-          font-family: monospace;
-          font-size: 14px;
-          line-height: 1.3;
-          margin: 0;
-      }
-      button {
-          border: none;
-          padding: 10px 15px;
-          cursor: pointer;
-          font-size: 1.4em;
-          font-family: monospace;
-      }
-
-      footer {
-          margin-top: 20px;
-          font-size: 0.8em;
-          text-align: center;
-      }
-
-      .social-links {
-          margin-top: 15px;
-          text-align: center;
-      }
-
-      .social-links a {
-          margin: 0 10px;
-          color: #a7b3d6;
-          text-decoration: none;
-      }
-
-      .social-links a:hover {
-          text-decoration: underline;
-      }
-
-      a {
-          color: #98a8d8; /* A soft blue for default links */
-          text-decoration: none; /* Optional: Removes the default underline */
-      }
-
-      a:visited {
-          color: #98a8d8; /* A light, desaturated blue-gray for visited links */
-      }
-
-      a:hover {
-          text-decoration: underline;
-      }
-
-  </style>
-
-  <script defer src="https://cdn.jsdelivr.net/pyodide/v0.26.0/full/pyodide.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/python/python.min.js"></script>
-
-</head>
-<body>
-<div id="code-container">
-  <label for="code"></label><textarea id="code">print("Hello from Pyodide!")</textarea>
-</div>
-<button id="run" disabled>execute</button>
-<div id="output-container">
-  <pre id="output"></pre>
-</div>
-<div class="social-links">
-  Follow me on:
-  <a href="https://x.com/jocerfranquiz" target="_blank">X.com</a> |
-  <a href="https://www.linkedin.com/in/jocerfranquiz" target="_blank">LinkedIn</a>
-</div>
-<footer>
-  <p>&copy; 2025 Jocer Franquiz</p>
-</footer>
-
-
-<script>
-  // Global variables potentially needed
-  let pyodide;
-  let codeEditor;
-
-  // Get references to DOM elements
-  const outputElement = document.getElementById('output');
-  const runButton = document.getElementById('run');
-  const codeTextArea = document.getElementById('code');
-  const codeContainer = document.getElementById('code-container');
-
-  // Function to append message and scroll output
-  function addToOutput(message) {
-    outputElement.textContent += message;
-    outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll
-  }
-
-  // Function to replace the previous message and display a new one
-  function displayNewMessage(newMessage) {
-    outputElement.textContent = newMessage;
-    outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll to the bottom in case the new message is long
-  }
-
-  // Function to initialize Pyodide and the editor
-  async function initialize() {
-    displayNewMessage(`Loading... Please wait...`);
-    try {
-      pyodide = await loadPyodide();
-
-      displayNewMessage(`Pyodide ${pyodide.version}\n`);
-      addToOutput(`Running Python ${pyodide.runPython("import sys; sys.version.split(' ')[0]")} 🐍\n\n`);
-      codeEditor = CodeMirror.fromTextArea(codeTextArea, {
-        mode: 'python',
-        theme: 'material-darker',
-        lineNumbers: true,
-        indentUnit: 2,
-      });
-      codeEditor.setSize("100%", "100%");
-
-      pyodide.setStdout({
-        batched: (str) => {
-          addToOutput(str + "\n");
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pyodide in HTML</title>
+    <link href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" rel="icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css">
+    <style>
+        body {
+            background-color: #333;
+            color: #eee;
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
         }
-      });
-      pyodide.setStderr({
-        batched: (str) => {
-          addToOutput("Error: " + str + "\n");
+        #code-container {
+            flex-grow: 1;
+            margin-bottom: 10px;
         }
-      });
-
-      addToOutput("Edit the code above and press execute!\n");
-      runButton.disabled = false; // Enable the run button
-
-      runButton.addEventListener('click', async () => {
-        const code = codeEditor.getValue();
-        outputElement.textContent = ''; // Clear previous output
-        runButton.disabled = true; // Disable button during execution
-        try {
-          await pyodide.runPythonAsync(code);
-        } catch (err) {
-          addToOutput("Execution Error: " + err + "\n");
-        } finally {
-          runButton.disabled = false; // Re-enable button
+        #code {
+            display: none; /* Hide the textarea */
+            height: 100%;
         }
-      });
 
-    } catch (err) {
-      addToOutput("Error loading Pyodide: " + err + "\n");
-      console.error("Error loading Pyodide:", err);
-      // Keep button disabled if loading fails
+        #output-container {
+            height: 30%;
+            flex-shrink: 0;
+            border: 1px solid #666;
+            margin-bottom: 10px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #222;
+        }
+        #output {
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.3;
+            margin: 0;
+        }
+        button {
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1.4em;
+            font-family: monospace;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.8em;
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .social-links a {
+            margin: 0 10px;
+            color: #a7b3d6;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            text-decoration: underline;
+        }
+
+        a {
+            color: #98a8d8; /* A soft blue for default links */
+            text-decoration: none; /* Optional: Removes the default underline */
+        }
+
+        a:visited {
+            color: #98a8d8; /* A light, desaturated blue-gray for visited links */
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
+    <script defer src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
+
+  </head>
+  <body>
+  <div id="code-container">
+    <label for="code"></label><textarea id="code">print("Hello from Pyodide!")</textarea>
+  </div>
+  <button id="run" disabled>execute</button>
+  <div id="output-container">
+    <pre id="output"></pre>
+  </div>
+  <div class="social-links">
+    <p>Follow me on:
+    <a href="https://x.com/jocerfranquiz" target="_blank">X.com</a> |
+      <a href="https://www.linkedin.com/in/jocerfranquiz" target="_blank">LinkedIn</a></p>
+  </div>
+  <footer>
+    <p>&copy; 2025 Jocer Franquiz</p>
+  </footer>
+
+
+  <script>
+    // Global variables potentially needed
+    let pyodide;
+    let codeEditor;
+
+    // Get references to DOM elements
+    const outputElement = document.getElementById('output');
+    const runButton = document.getElementById('run');
+    const codeTextArea = document.getElementById('code');
+    //const codeContainer = document.getElementById('code-container');
+
+    // Function to append message and scroll output
+    function addToOutput(message) {
+      outputElement.textContent += message;
+      outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll
     }
-  }
 
-  // Get the Pyodide script tag
-  const pyodideScript = document.querySelector('script[src*="pyodide.js"]');
+    // Function to replace the previous message and display a new one
+    function displayNewMessage(newMessage) {
+      outputElement.textContent = newMessage;
+      outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll to the bottom in case the new message is long
+    }
 
-  // Call initialize once the Pyodide script has loaded
-  if (pyodideScript) {
-    pyodideScript.onload = initialize;
-  } else {
-    addToOutput("Error: Pyodide script tag not found.\n");
-  }
-</script>
-</body>
+    // Function to initialize Pyodide and the editor
+    async function initialize() {
+      displayNewMessage(`Loading... Please wait...`);
+      try {
+        pyodide = await loadPyodide();
+
+        displayNewMessage(`Pyodide ${pyodide.version}\n`);
+        addToOutput(`Running Python ${pyodide.runPython("import sys; sys.version.split(' ')[0]")} 🐍\n\n`);
+        codeEditor = CodeMirror.fromTextArea(codeTextArea, {
+          mode: 'python',
+          theme: 'material-darker',
+          lineNumbers: true,
+          indentUnit: 2,
+        });
+        codeEditor.setSize("100%", "100%");
+
+        pyodide.setStdout({
+          batched: (str) => {
+            addToOutput(str + "\n");
+          }
+        });
+        pyodide.setStderr({
+          batched: (str) => {
+            addToOutput("Error: " + str + "\n");
+          }
+        });
+
+        addToOutput("Edit the code above and press execute!\n");
+        runButton.disabled = false; // Enable the run button
+
+        runButton.addEventListener('click', async () => {
+          const code = codeEditor.getValue();
+          outputElement.textContent = ''; // Clear previous output
+          runButton.disabled = true; // Disable button during execution
+          try {
+            await pyodide.runPythonAsync(code);
+          } catch (err) {
+            addToOutput("Execution Error: " + err + "\n");
+          } finally {
+            runButton.disabled = false; // Re-enable button
+          }
+        });
+
+      } catch (err) {
+        addToOutput("Error loading Pyodide: " + err + "\n");
+        console.error("Error loading Pyodide:", err);
+        // Keep button disabled if loading fails
+      }
+    }
+
+    // Get the Pyodide script tag
+    const pyodideScript = document.querySelector('script[src*="pyodide.js"]');
+
+    // Call initialize once the Pyodide script has loaded
+    if (pyodideScript) {
+      pyodideScript.onload = initialize;
+    } else {
+      addToOutput("Error: Pyodide script tag not found.\n");
+    }
+  </script>
+  </body>
 </html>
