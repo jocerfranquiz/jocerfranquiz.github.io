@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>locus communis</title>
     <style>
       body {
           background-color: #333;
           color: #eee;
-          font-family: monospace;
+          font-family: "Roboto Mono", monospace;
           margin: 0;
           padding: 20px;
           display: flex;
@@ -85,6 +88,21 @@
       a:hover {
           text-decoration: underline;
       }
+
+      code {
+          background: rgba(80, 80, 80, 10); /* Nord blue tint */
+          color: #b0bad6;
+          border-radius: 3px; /* Subtle rounding */
+          padding: 0.2em 0.4em; /* Tight but not cramped */
+          line-height: 1.5; /* Improves readability */
+      }
+
+      pre > code {
+          display: block;
+          padding: 1em;
+          overflow-x: auto;
+          border-left: 3px solid #6e6e6e; /* Accent bar */
+      }
     </style>
   </head>
   <body>
@@ -92,16 +110,18 @@
       <h1>🌿locus communis🌿</h1>
     </header>
     <div>
-      <h1>Hello, there!</h1>
+      <h1>Welcome...</h1>
       <p>This is my <b>locus communis</b> or <em>commonplace book</em>, a collection of writings with a common theme...</p>
       <p>Find more about "commonplace books" here on this <a href="https://en.wikipedia.org/wiki/Commonplace_book#:~:text=%22Commonplace%22%20is%20a%20translation%20of,a%20statement%20of%20proverbial%20wisdom." target="_blank">link</a>.
       </p>
     </div>
     <div>
       <h2>News!</h2>
-      <p>>>> Try my new Python browser-based <a href="python_editor.html" target="_blank">editor</a>!. It uses the latest <a href="https://pyodide.org/en/stable/index.html">Pyodide</a>
+      <p>🌱 Try my new Python browser-based <a href="python_editor.html" target="_blank">editor</a>!. It uses the latest <a href="https://pyodide.org/en/stable/index.html">Pyodide</a>
         interpreter.</p>
+      <p>🌱 I'll publish soon the first official post on this site. We will talk about <b>Propositional Logic</b>, with <code>Python</code> and <code>SQL</code> examples (it's not boring, I promise!).</p>
     </div>
+    <!--
     <div>
       <h2><a href="./program.html">We are (not) wrong about databases!</a></h2>
       <p>Building a database category engine in Python from scratch!</p>
@@ -110,6 +130,7 @@
           <p>We're going on a practical journey, inspired by the work of <b>David I. Spivak</b>, to see how thinking in terms of objects, arrows, and compositions can make us (not) wrong about databases. We'll use <code>Python</code> and <code>SQLite</code>, reconnecting to concepts you already know, and build up intuition step-by-step. Ready to level up your thinking about data?</p>
       </div>
     </div>
+    -->
     <div class="social-links">
       <p>Follow me on:
       <a href="https://x.com/jocerfranquiz" target="_blank">X.com</a> |
