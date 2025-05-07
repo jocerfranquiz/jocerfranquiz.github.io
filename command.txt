@@ -1,0 +1,1 @@
+pandoc .\01.md -o 01.html --template=./template.html --mathjax
