@@ -1,0 +1,225 @@
+/* CSS Variables */
+:root {
+  --bg-color: #333;
+  --text-color: #eee;
+  --link-color: #b0c4ff; /* Brighter blue for better contrast */
+  --link-visited-color: #8fa3e6; /* Darker shade for visited links */
+  --social-link-color: #a7b3d6;
+  --table-bg-color: #2c2c2c;
+  --table-border-color: #444;
+}
+
+/* Global Styles */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Roboto Mono", monospace;
+  padding: 20px;
+  display: flex;
+  /*align-items: center;*/
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 80ch;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Styles */
+header {
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.8em;
+}
+
+/* Responsive Design for Header */
+@media screen and (max-width: 768px) {
+  header h1 {
+    font-size: 1.8em;
+  }
+    blockquote {
+    border-left-width: 2px; /* Thinner line on small screens */
+    padding-left: 10px; /* Less padding */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  header h1 {
+    font-size: 1.4em;
+  }
+    blockquote {
+    border-left-width: 2px; /* Thinner line on small screens */
+    padding-left: 10px; /* Less padding */
+  }
+}
+
+/* Social Links */
+.social-links {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.social-links a {
+  margin: 0 10px;
+  color: var(--social-link-color);
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  text-decoration: underline;
+}
+
+.social-links a:focus {
+  outline: 2px solid var(--social-link-color);
+  outline-offset: 2px;
+}
+
+/* Content Section */
+.content {
+  max-width: 80ch;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+/* Footer Styles */
+footer {
+  margin-top: 20px;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+/* Link Styles */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--link-visited-color);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-radius: 8px;
+  border-collapse: collapse;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  background: var(--table-bg-color);
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--table-border-color);
+}
+
+/* Image Styles */
+img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* Heading Styles */
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-align: left;
+  align-self: flex-start; /* Aligns header to the left */
+  font-size: 1.3em;
+}
+
+blockquote {
+  position: relative;
+  padding: 0 0 0 20px; /* Adjust padding as needed */
+  margin: 1em 0;
+}
+
+blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15px; /* Match top padding of blockquote */
+  height: calc(100% - 30px); /* Subtract top and bottom padding (15px + 15px) */
+  width: 4px;
+  background-color: var(--text-color);
+}
+
+/* Inline Code */
+code {
+  background-color: rgba(80, 80, 80, 10);
+  color: #b0bad6;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.95em;
+  border: 1px solid var(--table-border-color);
+  line-height: 1.5; /* Improves readability */
+}
+
+/* Block Code */
+pre code {
+  display: block;
+  background-color: var(--table-bg-color);
+  color: var(--text-color);
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid var(--table-border-color);
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.9em;
+}
+
+/* Focus State */
+code:focus {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Optional Syntax Highlighting */
+code .keyword {
+  color: #ff79c6;
+}
+code .string {
+  color: #f1fa8c;
+}
+code .comment {
+  color: #6272a4;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  code {
+    font-size: 0.9em;
+    padding: 2px 3px;
+  }
+  pre code {
+    font-size: 0.85em;
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  code {
+    font-size: 0.85em;
+  }
+  pre code {
+    font-size: 0.8em;
+    padding: 8px;
+  }
+}

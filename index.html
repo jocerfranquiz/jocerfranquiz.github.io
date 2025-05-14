@@ -8,102 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     <title>locus communis</title>
-    <style>
-      body {
-          background-color: #333;
-          color: #eee;
-          font-family: "Roboto Mono", monospace;
-          margin: 0;
-          padding: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          min-height: 100vh;
-      }
-
-      header {
-          margin-bottom: 60px;
-          text-align: center;
-      }
-
-      header h1 {
-          font-size: 2.8em; /* Default larger size for desktop */
-          margin: 0; /* Reset default margins for better control */
-      }
-
-      /* Media query for screens with a maximum width of 768px (typical for tablets and phones) */
-      @media screen and (max-width: 768px) {
-          header h1 {
-              font-size: 1.8em; /* Smaller size for mobile */
-          }
-      }
-
-      /* You can add more media queries for even smaller screens if needed */
-      @media screen and (max-width: 480px) {
-          header h1 {
-              font-size: 1.4em; /* Even smaller size for smaller phones */
-          }
-      }
-
-      .social-links {
-          margin-top: 15px;
-          text-align: center;
-      }
-
-      .social-links a {
-        margin: 0 10px;
-        color: #a7b3d6;
-        text-decoration: none;
-      }
-
-      .social-links a:hover {
-        text-decoration: underline;
-      }
-
-      div {
-          max-width: 80ch;
-          /*min-width: 80ch;
-          text-align: left;*/
-          display: flex;
-          flex-direction: column;
-      }
-
-      footer {
-        margin-top: 20px;
-        font-size: 0.8em;
-        text-align: center;
-      }
-
-
-      a {
-          color: #98a8d8; /* A soft blue for default links */
-          text-decoration: none; /* Optional: Removes the default underline */
-      }
-
-      a:visited {
-          color: #98a8d8; /* A light, desaturated blue-gray for visited links */
-      }
-
-      a:hover {
-          text-decoration: underline;
-      }
-
-      code {
-          background: rgba(80, 80, 80, 10); /* Nord blue tint */
-          color: #b0bad6;
-          border-radius: 3px; /* Subtle rounding */
-          padding: 0.2em 0.4em; /* Tight but not cramped */
-          line-height: 1.5; /* Improves readability */
-      }
-
-      pre > code {
-          display: block;
-          padding: 1em;
-          overflow-x: auto;
-          border-left: 3px solid #6e6e6e; /* Accent bar */
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header>
@@ -117,9 +22,20 @@
     </div>
     <div>
       <h2>News!</h2>
+      <p>🌱 Check here the <a href="from_thoughts_to_natural_language.html">first post</a> from the series <strong>From Natural Language to Logic Computation</strong>, where we
+    explore different concepts and methods that allow us to extract the
+    logical structure behind our words. Step-by-step we will build an
+    <strong>engine</strong> using <code>Python</code>,
+    <code>SQLite</code>, <code>spaCy</code>, and some <code>LLM</code>
+    magic, to grow from <em>context</em>, to <em>axioms</em> and
+    <em>propositions</em>, in order to prove those automatically. This
+    will help to detect <em>contradictions</em>, <em>claims</em>,
+    <em>facts</em>, and <em>undecidable statements</em> that pinpoint
+    where more data is needed.</p> 
+      </p>
       <p>🌱 Try my new Python browser-based <a href="python_editor.html" target="_blank">editor</a>!. It uses the latest <a href="https://pyodide.org/en/stable/index.html">Pyodide</a>
         interpreter.</p>
-      <p>🌱 I'll publish soon the first official post on this site. We will talk about <b>Propositional Logic</b>, with <code>Python</code> and <code>SQL</code> examples (it's not boring, I promise!).</p>
+      
     </div>
     <!--
     <div>

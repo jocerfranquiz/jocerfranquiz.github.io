@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" rel="icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <title>locus communis</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- KATEX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous">
+  </head>
+  <body>
+    <header>
+      <h1><a href="./index.html">🌿locus communis🌿</a></h1>
+    </header>
+    <h1 id="part-1-from-thoughts-to-natural-language">Part 1: From
+    Thoughts to Natural Language</h1>
+    <p>This is the beginning of the series <strong>From Natural Language
+    to Logic Computation</strong>, where we explore different concepts
+    and methods that allow us to extract the logical structure behind
+    our words. Step-by-step we will build an <strong>engine</strong>
+    using <code>Python</code>, <code>SQLite</code>, <code>spaCy</code>,
+    and some <code>LLM</code> magic, to grow from <em>context</em>, to
+    <em>axioms</em> and <em>propositions</em>, in order to prove those
+    automatically. This will help to detect <em>contradictions</em>,
+    <em>claims</em>, <em>facts</em>, and <em>undecidable statements</em>
+    that pinpoint where more data is needed.</p>
+    <h2 id="sentences">Sentences</h2>
+    <p>As everything important in life, we begin with philosophical
+    questioning: <strong>what is a sentence?</strong></p>
+    <blockquote>
+    <p>From a linguistics point of view, a sentence is a unit of
+    language that expresses <strong>a complete thought</strong>, and
+    typically consists of a <strong>subject</strong> (or implied
+    subject) and a <strong>predicate</strong>.</p>
+    </blockquote>
+    <p>One sentence, one thought! That’s it. Looks simple, but
+    <strong>this is the most powerful tool of humanity before the
+    written word</strong>. Any thought you can have can be expressed as
+    a sentence, and we just take it for granted. But imagine one of our
+    ancestors 20k years ago trying to explain the strategy tomorrow to
+    hunt deer. Not many words, so many signs and gestures. Let’s
+    continue with the definition of sentence.</p>
+    <figure>
+    <img src="./img/thoughts.png" alt="Human having thoughts" />
+    <figcaption aria-hidden="true">Human having thoughts</figcaption>
+    </figure>
+    <blockquote>
+    <p>A sentence is syntactically independent and usually contains a
+    <strong>finite verb</strong>, allowing it to stand alone as a
+    <strong>coherent statement</strong>, <strong>question</strong>,
+    <strong>command</strong>, or <strong>exclamation</strong>. They are
+    governed by grammatical rules and can be analyzed in terms of
+    structure (e.g., simple, compound, complex) as well as function
+    (e.g., declarative, interrogative, imperative).</p>
+    </blockquote>
+    <p>Ok, this is interesting for two reasons. Let’s see below.</p>
+    <p><strong>1. There are different classes of sentences.</strong></p>
+    <p>This makes sense because they are different types of thoughts.
+    So, from a pragmatic point of view, sentences can be:</p>
+    <ul>
+    <li><strong>Interrogative:</strong> “What time is it?” / “Did you
+    finish your homework?”</li>
+    <li><strong>Imperative:</strong> “Close the door.” / “Pass the salt,
+    please.”</li>
+    <li><strong>Exclamatory:</strong> “What a beautiful day!” / “How
+    amazing that was!” / “Dance!”</li>
+    <li><strong>Performative:</strong> “I promise to be there.” / “I
+    will sell that house tomorrow.”</li>
+    <li><strong>Optative:</strong> “Long life and prosper.” / “If only I
+    were rich!”</li>
+    <li><strong>Non-Sensical or Meaningless:</strong> “The sky is
+    horse.” / “I’m a lemon, because I’m - immortal.”</li>
+    <li><strong>Social Formulas:</strong> “Hello friend!” / “Good
+    luck!”</li>
+    </ul>
+    <p>These distinctions matter because an engine will want to focus on
+    propositions, claims, and statements (declarative sentences).</p>
+    <p><strong>2. They have different grammatical
+    structures.</strong></p>
+    <p>Sentences have different structures (<em>syntactic
+    arrangement</em>). The main structures are:</p>
+    <ul>
+    <li><strong>Simple:</strong> Contains <strong>one independent
+    clause</strong>: a subject + predicate, e.g. “She reads books.”</li>
+    <li><strong>Compound:</strong> Combines <strong>two or more
+    independent clauses</strong>, joined by coordinating conjunctions
+    like <em>and, but, or</em>, e.g. “She reads books, and he writes
+    stories.”</li>
+    <li><strong>Complex:</strong> Contains <strong>one independent
+    clause + at least one dependent clause</strong>, introduced by
+    subordinating conjunctions like <em>because, although, when</em>,
+    e.g. “She reads books because she loves learning.”</li>
+    <li><strong>Compound-Complex:</strong> Combines <strong>multiple
+    independent clauses + at least one dependent clause</strong>,
+    e.g. “She reads books, and he writes stories because they love
+    literature.”</li>
+    </ul>
+    <p>Complex sentences might require breaking down into smaller
+    logical units to be handled. But structure alone isn’t enough.
+    Context often decides what a sentence really means.</p>
+    <h2 id="context-is-king-the-ambiguity-problem.">Context is King (the
+    ambiguity problem).</h2>
+    <p>A sentence that seems <strong>nonsensical</strong> in isolation
+    might make perfect sense in a specific situation, like inside a
+    poem, a joke, or a manual. Similarly, a simple statement like
+    <em>“It’s cold.”</em> can function as an observation, a request (to
+    close a window), or even a warning, depending on the context in
+    which it’s spoken. This is also known as <strong>The ambiguity
+    problem</strong>.</p>
+    <h3 id="the-role-of-context-in-sentence-interpretation">The Role of
+    Context in Sentence Interpretation</h3>
+    <figure>
+    <img src="./img/piracy.png" alt="Pirates in different centuries" />
+    <figcaption aria-hidden="true">Pirates in different
+    centuries</figcaption>
+    </figure>
+    <p>There are different types of context. Let’s review some of
+    them:</p>
+    <p><strong>Linguistic Context</strong>: The surrounding words and
+    sentences can clarify meaning. For example <em>“She saw the man with
+    the telescope.”</em>. In this sentence, Is <em>“with the
+    telescope”</em> describing the man or how she saw him? Only nearby
+    sentences can help to resolve this ambiguity.</p>
+    <p><strong>Situational Context</strong>: The physical setting,
+    speaker, and listener influence interpretation. If someone shouts
+    <em>“Fire!”</em> in a theater, it’s an alarm. The same word at a
+    campsite might just be a request to light one.</p>
+    <p><strong>Cultural Context</strong>: Shared knowledge shapes
+    understanding. <em>“Break a leg!”</em> is encouragement in theater
+    but literal elsewhere. Sarcasm (e.g., <em>“Great, another
+    meeting…”</em>) relies on tone and cultural norms.</p>
+    <p><strong>Cognitive Context</strong>: A listener’s background
+    knowledge matters. <em>“The Eiffel Tower is in Paris.”</em> makes
+    sense if you know what/where Paris is.</p>
+    <h3 id="the-flexibility-of-sentences">The Flexibility of
+    Sentences</h3>
+    <p>Because of context, sentences are incredibly adaptable. A single
+    structure can serve multiple purposes: - <em>“You’re leaving?”</em>
+    (question) vs. <em>“You’re leaving?”</em> (statement or accusation).
+    - <em>“Nice weather.”</em> could be genuine, sarcastic, or small
+    talk.</p>
+    <p>Even “incomplete” fragments (<em>“Coffee?”</em>, <em>“No
+    way!”</em>) function as full sentences in conversation. <strong>This
+    fluidity is why language is alive, it bends to fit human
+    thoughts.</strong></p>
+    <h2 id="next-time">Next time</h2>
+    <p>Now that we’ve seen how sentences capture thoughts—and how
+    context shapes them—the next step is turning these ideas into
+    something a computer can work with, like <strong>First Order
+    Logic</strong>, a system computers use to turn statements into
+    precise, calculable forms.</p>
+    <p><strong>Have you ever said a sentence that was misunderstood due
+    to context?</strong> See you later…</p>
+    <div class="social-links">
+      <p>Follow me on:
+      <a href="https://x.com/jocerfranquiz" target="_blank">X.com</a> |
+        <a href="https://www.linkedin.com/in/jocerfranquiz" target="_blank">LinkedIn</a></p>
+    </div>
+    <!-- KATEX -->
+    <!-- The loading of KaTeX is deferred to speed up page rendering -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6" crossorigin="anonymous"></script>
+    <!-- To automatically render math in text elements, include the auto-render extension: -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);">
+    </script>
+    <script defer src="katex-delimiters.js"></script>
+    <!-- KATEX -->
+  </body>
+  <footer>
+    <p>&copy; 2025 Jocer Franquiz</p>
+    <p style="font-size: 1.8em">🌿</p>
+  </footer>
+</html>
