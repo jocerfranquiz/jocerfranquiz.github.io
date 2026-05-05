@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Architecture Components — A Provider-Agnostic Reference</title>
+<meta name="description" content="A provider-agnostic reference of cloud architecture components with their equivalents in AWS, Azure, GCP, and the open-source ecosystem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=JetBrains+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================================
+     Nord palette — https://www.nordtheme.com/
+     Polar Night : nord0–3   (dark backgrounds)
+     Snow Storm  : nord4–6   (light text & surfaces)
+     Frost       : nord7–10  (accents — teals & blues)
+     Aurora      : nord11–15 (semantic — red, orange, yellow, green, purple)
+     =========================================================== */
+  :root {
+    --nord0:  #2E3440;
+    --nord1:  #3B4252;
+    --nord2:  #434C5E;
+    --nord3:  #4C566A;
+    --nord4:  #D8DEE9;
+    --nord5:  #E5E9F0;
+    --nord6:  #ECEFF4;
+    --nord7:  #8FBCBB;
+    --nord8:  #88C0D0;
+    --nord9:  #81A1C1;
+    --nord10: #5E81AC;
+    --nord11: #BF616A;
+    --nord12: #D08770;
+    --nord13: #EBCB8B;
+    --nord14: #A3BE8C;
+    --nord15: #B48EAD;
+
+    --bg:        var(--nord0);
+    --bg-soft:   var(--nord1);
+    --bg-card:   #353C4A;
+    --border:    #434C5E;
+    --border-soft: #3B4252;
+    --text:      var(--nord6);
+    --text-mute: #ABB4C2;
+    --text-dim:  #7A8494;
+    --accent:    var(--nord8);
+    --accent-2:  var(--nord9);
+    --accent-3:  var(--nord7);
+
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans:  "Inter Tight", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --maxw: 1320px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(136,192,208,0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 10%, rgba(143,188,187,0.06), transparent 60%),
+      radial-gradient(ellipse 50% 30% at 10% 30%, rgba(94,129,172,0.07), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  ::selection { background: var(--nord10); color: var(--nord6); }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--nord7); }
+
+  /* ===========================================================
+     TOP BAR — author byline + socials, persistent at top
+     =========================================================== */
+  .topbar {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 24px 32px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topbar .author {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar .author .by { color: var(--text-dim); }
+  .topbar .author .name { color: var(--nord6); }
+  .topbar .author .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--nord8);
+    display: inline-block;
+  }
+  .topbar .socials {
+    display: flex;
+    gap: 6px;
+  }
+  .topbar .social {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    color: var(--text-mute);
+    transition: all 0.18s ease;
+    background: transparent;
+  }
+  .topbar .social:hover {
+    border-color: var(--nord8);
+    color: var(--nord8);
+    background: var(--bg-soft);
+    transform: translateY(-1px);
+  }
+  .topbar .social svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* ===========================================================
+     HEADER / HERO
+     =========================================================== */
+  .hero {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 56px 32px 48px;
+    position: relative;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    right: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--nord8);
+    margin-bottom: 28px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: var(--nord8);
+  }
+
+  h1.title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, 7vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0 0 24px;
+    color: var(--nord6);
+  }
+  h1.title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--nord8);
+  }
+
+  .lede {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.55;
+    color: var(--text-mute);
+    max-width: 720px;
+    margin: 0 0 48px;
+  }
+
+  /* ===========================================================
+     META BAR — providers + counts
+     =========================================================== */
+  .meta-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .meta-cell {
+    background: var(--bg);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meta-cell .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .meta-cell .value {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--nord6);
+    letter-spacing: -0.01em;
+  }
+  .meta-cell:nth-child(1) .value { color: var(--nord13); }
+  .meta-cell:nth-child(2) .value { color: var(--nord9); }
+  .meta-cell:nth-child(3) .value { color: var(--nord7); }
+  .meta-cell:nth-child(4) .value { color: var(--nord14); }
+
+  /* ===========================================================
+     CONTROLS — search + filter
+     =========================================================== */
+  .controls {
+    max-width: var(--maxw);
+    margin: 0 auto 32px;
+    padding: 0 32px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search {
+    flex: 1;
+    min-width: 280px;
+    position: relative;
+  }
+  .search input {
+    width: 100%;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 12px 16px 12px 42px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .search input:focus {
+    border-color: var(--nord8);
+    background: var(--bg-card);
+  }
+  .search input::placeholder {
+    color: var(--text-dim);
+  }
+  .search svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--text-dim);
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-mute);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .pill:hover {
+    border-color: var(--nord9);
+    color: var(--nord6);
+  }
+  .pill.active {
+    background: var(--nord8);
+    border-color: var(--nord8);
+    color: var(--nord0);
+  }
+
+  /* ===========================================================
+     COMPONENT SECTIONS
+     =========================================================== */
+  main {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  .component-section {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+
+  .component-header {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .component-header::before {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 80px;
+    height: 1px;
+    background: var(--nord8);
+  }
+
+  .component-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--nord8);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    padding-top: 12px;
+  }
+
+  .component-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3.5vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--nord6);
+    flex: 1;
+  }
+
+  .component-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding-top: 16px;
+  }
+
+  /* ===========================================================
+     TYPE CARDS
+     =========================================================== */
+  .types-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .type-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .type-card:hover {
+    border-color: var(--nord3);
+  }
+
+  .type-card-top {
+    padding: 24px 28px 20px;
+    display: grid;
+    grid-template-columns: 1.1fr 2fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .type-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--nord6);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .type-desc {
+    color: var(--text-mute);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    font-family: var(--sans);
+  }
+
+  .providers-grid {
+    border-top: 1px solid var(--border-soft);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .provider {
+    padding: 18px 24px;
+    border-right: 1px solid var(--border-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 76px;
+  }
+  .provider:last-child { border-right: none; }
+
+  .provider-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .provider-label::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .provider.aws .provider-label { color: var(--nord13); }
+  .provider.aws .provider-label::before { background: var(--nord13); }
+  .provider.azure .provider-label { color: var(--nord9); }
+  .provider.azure .provider-label::before { background: var(--nord9); }
+  .provider.gcp .provider-label { color: var(--nord7); }
+  .provider.gcp .provider-label::before { background: var(--nord7); }
+  .provider.oss .provider-label { color: var(--nord14); }
+  .provider.oss .provider-label::before { background: var(--nord14); }
+
+  .provider-value {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--nord5);
+    line-height: 1.45;
+  }
+
+  .provider-value .note {
+    display: block;
+    font-size: 11px;
+    color: var(--nord12);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ===========================================================
+     TABLE OF CONTENTS — sticky sidebar on large screens
+     =========================================================== */
+  .layout {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 32px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+  }
+
+  .toc {
+    position: sticky;
+    top: 32px;
+    align-self: start;
+    padding-top: 8px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: toc;
+  }
+  .toc li {
+    counter-increment: toc;
+    margin-bottom: 2px;
+  }
+  .toc a {
+    display: flex;
+    gap: 10px;
+    padding: 6px 8px;
+    font-size: 13px;
+    color: var(--text-mute);
+    border-radius: 3px;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .toc a:hover {
+    color: var(--nord6);
+    background: var(--bg-soft);
+  }
+  .toc a.active {
+    color: var(--nord8);
+  }
+  .toc a.active::before {
+    color: var(--nord8);
+  }
+
+  main.content { min-width: 0; }
+
+  /* ===========================================================
+     FOOTER
+     =========================================================== */
+  footer {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 56px 32px 72px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    padding-top: 24px;
+  }
+  footer .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  footer .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  footer .legend-item::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  footer .legend-item.aws::before { background: var(--nord13); }
+  footer .legend-item.azure::before { background: var(--nord9); }
+  footer .legend-item.gcp::before { background: var(--nord7); }
+  footer .legend-item.oss::before { background: var(--nord14); }
+
+  /* socials */
+  .socials {
+    display: flex;
+    gap: 8px;
+  }
+  .social {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-mute);
+    transition: all 0.18s ease;
+    background: transparent;
+  }
+  .social:hover {
+    border-color: var(--nord8);
+    color: var(--nord8);
+    background: var(--bg-soft);
+    transform: translateY(-1px);
+  }
+  .social svg {
+    width: 16px;
+    height: 16px;
+  }
+  .author {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .author .by {
+    color: var(--text-dim);
+  }
+  .author .name {
+    color: var(--nord6);
+  }
+
+  /* license */
+  .license {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--text-mute);
+    line-height: 1.5;
+    max-width: 640px;
+  }
+  .license-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--nord8);
+    background: var(--bg-soft);
+    flex-shrink: 0;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .license-badge:hover {
+    border-color: var(--nord8);
+    color: var(--nord7);
+  }
+  .license-badge .cc-icons {
+    display: inline-flex;
+    gap: 2px;
+  }
+  .license-badge .cc-circle {
+    width: 14px;
+    height: 14px;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    font-family: var(--sans);
+    letter-spacing: 0;
+  }
+  .footnote {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* ===========================================================
+     SCROLLBAR
+     =========================================================== */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--nord2); border-radius: 5px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--nord3); }
+
+  /* ===========================================================
+     RESPONSIVE
+     =========================================================== */
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 1fr; }
+    .toc { display: none; }
+  }
+
+  @media (max-width: 800px) {
+    .hero { padding: 36px 20px 32px; }
+    .topbar { padding: 20px 20px 0; }
+    .controls, main, footer { padding-left: 20px; padding-right: 20px; }
+    .layout { padding: 0 20px; }
+    .meta-bar { grid-template-columns: repeat(2, 1fr); }
+    .type-card-top { grid-template-columns: 1fr; gap: 12px; }
+    .providers-grid { grid-template-columns: 1fr 1fr; }
+    .provider { border-right: 1px solid var(--border-soft); }
+    .provider:nth-child(2n) { border-right: none; }
+    .provider:nth-child(1), .provider:nth-child(2) { border-bottom: 1px solid var(--border-soft); }
+    .component-header { gap: 12px; flex-wrap: wrap; }
+    footer { padding: 40px 20px 56px; }
+    .footer-top, .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  /* hidden helper */
+  .hidden { display: none !important; }
+
+  /* fade-in on scroll */
+  .component-section { opacity: 1; }
+
+  /* print */
+  @media print {
+    body { background: white; color: black; }
+    .toc, .controls, footer { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .type-card { page-break-inside: avoid; border: 1px solid #ccc; }
+    .component-section { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="author">
+    <span class="dot"></span>
+    <span class="by">By</span>
+    <span class="name">Jocer Franquiz.</span>
+  </div>
+  <div class="socials">
+    <a class="social" href="https://linkedin.com/in/jocerfranquiz" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    </a>
+    <a class="social" href="https://github.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+    </a>
+    <a class="social" href="https://x.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="X (Twitter)">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    </a>
+    <a class="social" href="https://dev.to/jocerfranquiz" target="_blank" rel="noopener" aria-label="DEV Community">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.42 10.05c-.18-.16-.46-.23-.84-.23H6l.02 2.44.04 2.45.56-.02c.41 0 .63-.07.83-.26.24-.24.26-.36.26-2.2 0-1.91-.02-1.96-.29-2.18zM0 4.94v14.12h24V4.94H0zM8.56 15.3c-.44.58-1.06.77-2.53.77H4.71V8.53h1.4c1.67 0 2.16.18 2.6.9.27.43.29.6.32 2.57.05 2.23-.02 2.73-.47 3.3zm5.09-5.47h-2.47v1.77h1.52v1.28l-.72.04-.75.03v1.77l1.22.03 1.2.04v1.28h-1.6c-1.53 0-1.6-.01-1.87-.3l-.3-.28v-3.16c0-3.02.01-3.18.25-3.48.23-.31.25-.31 2.02-.32h1.78v1.3zm4.68 5.45c-.17.43-.64.79-1 .79-.18 0-.45-.15-.67-.39-.32-.32-.45-.63-.82-2.08l-.9-3.39-.45-1.67h.76c.4 0 .75.02.75.05 0 .06 1.16 4.54 1.26 4.83.04.15.32-.7.73-2.3l.66-2.52.74-.04c.4-.02.74 0 .74.04 0 .14-1.67 6.38-1.8 6.68z"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">A Provider-Agnostic Reference</div>
+  <h1 class="title">Cloud Architecture, <em>distilled.</em></h1>
+  <p class="lede">
+    Every cloud provider markets a different vocabulary for the same fundamental building blocks. This reference distills the architecture into fourteen components and sixty-five distinct types — and shows you the canonical equivalents in AWS, Azure, GCP, and the open-source ecosystem.
+  </p>
+
+  <div class="meta-bar">
+    <div class="meta-cell">
+      <span class="label">Components</span>
+      <span class="value">14</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Types</span>
+      <span class="value">65</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Providers</span>
+      <span class="value">4</span>
+    </div>
+    <div class="meta-cell">
+      <span class="label">Verified</span>
+      <span class="value">May 2026</span>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="search">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="searchBox" placeholder="Search components, types, or services…" autocomplete="off">
+  </div>
+  <div class="filter-pills">
+    <button class="pill active" data-filter="all">All</button>
+    <button class="pill" data-filter="aws">AWS</button>
+    <button class="pill" data-filter="azure">Azure</button>
+    <button class="pill" data-filter="gcp">GCP</button>
+    <button class="pill" data-filter="oss">Open Source</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="toc" id="toc">
+    <div class="toc-title">Contents</div>
+    <ol id="tocList"></ol>
+  </aside>
+
+  <main class="content" id="content"></main>
+
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="author">
+      <span class="by">By</span>
+      <span class="name">Jocer Franquiz.</span>
+    </div>
+    <div class="socials">
+      <a class="social" href="https://linkedin.com/in/jocerfranquiz" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.063 2.063 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+      <a class="social" href="https://github.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+      </a>
+      <a class="social" href="https://x.com/jocerfranquiz" target="_blank" rel="noopener" aria-label="X (Twitter)">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <a class="social" href="https://dev.to/jocerfranquiz" target="_blank" rel="noopener" aria-label="DEV Community">
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.42 10.05c-.18-.16-.46-.23-.84-.23H6l.02 2.44.04 2.45.56-.02c.41 0 .63-.07.83-.26.24-.24.26-.36.26-2.2 0-1.91-.02-1.96-.29-2.18zM0 4.94v14.12h24V4.94H0zM8.56 15.3c-.44.58-1.06.77-2.53.77H4.71V8.53h1.4c1.67 0 2.16.18 2.6.9.27.43.29.6.32 2.57.05 2.23-.02 2.73-.47 3.3zm5.09-5.47h-2.47v1.77h1.52v1.28l-.72.04-.75.03v1.77l1.22.03 1.2.04v1.28h-1.6c-1.53 0-1.6-.01-1.87-.3l-.3-.28v-3.16c0-3.02.01-3.18.25-3.48.23-.31.25-.31 2.02-.32h1.78v1.3zm4.68 5.45c-.17.43-.64.79-1 .79-.18 0-.45-.15-.67-.39-.32-.32-.45-.63-.82-2.08l-.9-3.39-.45-1.67h.76c.4 0 .75.02.75.05 0 .06 1.16 4.54 1.26 4.83.04.15.32-.7.73-2.3l.66-2.52.74-.04c.4-.02.74 0 .74.04 0 .14-1.67 6.38-1.8 6.68z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="legend">
+      <span class="legend-item aws">AWS</span>
+      <span class="legend-item azure">Azure</span>
+      <span class="legend-item gcp">GCP</span>
+      <span class="legend-item oss">Open Source</span>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="license">
+      <a class="license-badge" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer license" aria-label="Creative Commons Attribution-ShareAlike 4.0 International">
+        <span class="cc-icons">
+          <span class="cc-circle">CC</span>
+          <span class="cc-circle">BY</span>
+          <span class="cc-circle">SA</span>
+        </span>
+        <span>4.0</span>
+      </a>
+      <span>This work is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer license">CC BY-SA 4.0</a> — share and adapt freely, with attribution, under the same terms.</span>
+    </div>
+    <div class="footnote">Verified May 2026.</div>
+  </div>
+</footer>
+
+<script>
+const DATA = [
+  {
+    component: "Compute",
+    types: [
+      { name: "Virtual Machines", desc: "Full OS instances for traditional workloads.", aws: "EC2", azure: "Virtual Machines", gcp: "Compute Engine", oss: "KVM / OpenStack Nova / Proxmox" },
+      { name: "Containers", desc: "Lightweight, portable runtime units.", aws: "ECS / Fargate", azure: "Container Instances", gcp: "Cloud Run / GKE", oss: "Docker / containerd" },
+      { name: "Serverless Functions", desc: "Event-triggered, ephemeral execution.", aws: "Lambda", azure: "Azure Functions", gcp: "Cloud Functions", oss: "OpenFaaS / Knative" },
+      { name: "Batch Compute", desc: "Large-scale parallel job processing.", aws: "AWS Batch", azure: "Azure Batch", gcp: "Batch", oss: "Slurm / Nomad" }
+    ]
+  },
+  {
+    component: "Storage",
+    types: [
+      { name: "Object Storage", desc: "Unstructured blobs and files accessed via API.", aws: "S3", azure: "Blob Storage", gcp: "Cloud Storage", oss: "MinIO / Ceph" },
+      { name: "Block Storage", desc: "Raw volumes attached to VMs.", aws: "EBS", azure: "Managed Disks", gcp: "Persistent Disk", oss: "Ceph RBD / LVM" },
+      { name: "File Storage", desc: "Shared network filesystems.", aws: "EFS / FSx", azure: "Azure Files", gcp: "Filestore", oss: "NFS / GlusterFS" },
+      { name: "Archive Storage", desc: "Low-cost, long-term cold storage.", aws: "S3 Glacier", azure: "Archive Storage", gcp: "Archive Storage", oss: "MinIO + tiering" }
+    ]
+  },
+  {
+    component: "Networking",
+    types: [
+      { name: "Virtual Network", desc: "Isolated private network space.", aws: "VPC", azure: "Virtual Network (VNet)", gcp: "VPC", oss: "Open vSwitch / Calico" },
+      { name: "Subnets", desc: "Network segmentation within a VPC.", aws: "VPC Subnets", azure: "VNet Subnets", gcp: "VPC Subnets", oss: "Linux networking / OVS" },
+      { name: "Load Balancer", desc: "Distributes traffic across instances.", aws: "ELB / ALB / NLB", azure: "Load Balancer", gcp: "Cloud Load Balancing", oss: "HAProxy / NGINX / Traefik" },
+      { name: "CDN", desc: "Edge caching for global content delivery.", aws: "CloudFront", azure: "Azure CDN / Front Door", gcp: "Cloud CDN", oss: "Varnish / Apache Traffic Server" },
+      { name: "DNS", desc: "Domain name resolution.", aws: "Route 53", azure: "Azure DNS", gcp: "Cloud DNS", oss: "BIND / PowerDNS / CoreDNS" },
+      { name: "VPN / Private Connectivity", desc: "Secure links to on-premises or other networks.", aws: "Site-to-Site VPN / Direct Connect", azure: "VPN Gateway / ExpressRoute", gcp: "Cloud VPN / Interconnect", oss: "WireGuard / OpenVPN / strongSwan" }
+    ]
+  },
+  {
+    component: "Databases",
+    types: [
+      { name: "Relational", desc: "Structured, SQL-based transactional data.", aws: "RDS / Aurora", azure: "Azure SQL / Database for PostgreSQL", gcp: "Cloud SQL / AlloyDB", oss: "PostgreSQL / MySQL / MariaDB" },
+      { name: "Document / NoSQL", desc: "Flexible schema for semi-structured data.", aws: "DocumentDB", azure: "Cosmos DB", gcp: "Firestore", oss: "MongoDB / CouchDB" },
+      { name: "Key-Value Store", desc: "Fast lookups by primary key.", aws: "DynamoDB", azure: "Cosmos DB (Table API)", gcp: "Bigtable", oss: "Redis / etcd / ScyllaDB" },
+      { name: "Graph Database", desc: "Relationship-heavy data.", aws: "Neptune", azure: "Cosmos DB (Gremlin API)", gcp: "Spanner Graph", oss: "Neo4j / JanusGraph / Dgraph" },
+      { name: "Time-Series Database", desc: "Optimized for timestamped data.", aws: "Timestream", azure: "Azure Data Explorer", gcp: "Bigtable (time-series)", oss: "InfluxDB / TimescaleDB / Prometheus" },
+      { name: "Data Warehouse", desc: "Analytical queries on large datasets.", aws: "Redshift", azure: "Synapse Analytics", gcp: "BigQuery", oss: "ClickHouse / Apache Druid" },
+      { name: "Data Lake", desc: "Raw, large-scale storage for analytics.", aws: "Lake Formation / S3", azure: "Data Lake Storage Gen2", gcp: "Cloud Storage + BigLake", oss: "Apache Hadoop / Iceberg / Delta Lake" }
+    ]
+  },
+  {
+    component: "Identity & Access Management",
+    types: [
+      { name: "Users and Groups", desc: "Human identities.", aws: "IAM Users / Groups", azure: "Entra ID Users / Groups", gcp: "Cloud Identity", oss: "Keycloak / FreeIPA" },
+      { name: "Roles", desc: "Assumable identities with permissions.", aws: "IAM Roles", azure: "Azure RBAC Roles", gcp: "IAM Roles", oss: "Keycloak / Open Policy Agent" },
+      { name: "Policies", desc: "Rules defining allowed actions.", aws: "IAM Policies", azure: "Azure Policy / RBAC", gcp: "IAM Policies", oss: "OPA / Casbin" },
+      { name: "Service Accounts", desc: "Non-human identities for workloads.", aws: "IAM Roles for Services", azure: "Managed Identities", gcp: "Service Accounts", oss: "SPIFFE / SPIRE" },
+      { name: "Federation / SSO", desc: "External identity provider integration.", aws: "IAM Identity Center", azure: "Entra ID Federation", gcp: "Workforce Identity Federation", oss: "Keycloak / Authentik / Authelia" }
+    ]
+  },
+  {
+    component: "Security",
+    types: [
+      { name: "Encryption Services", desc: "At-rest and in-transit data protection.", aws: "KMS-backed encryption", azure: "Azure Storage / Disk Encryption", gcp: "Default encryption / CMEK", oss: "LUKS / OpenSSL / age" },
+      { name: "Key Management", desc: "Cryptographic key lifecycle.", aws: "KMS / CloudHSM", azure: "Key Vault / Managed HSM", gcp: "Cloud KMS / Cloud HSM", oss: "HashiCorp Vault / OpenBao" },
+      { name: "Secrets Management", desc: "Credentials and tokens storage.", aws: "Secrets Manager", azure: "Key Vault", gcp: "Secret Manager", oss: "HashiCorp Vault / Infisical" },
+      { name: "Firewall / Security Groups", desc: "Traffic filtering rules.", aws: "Security Groups / NACLs", azure: "NSGs / Azure Firewall", gcp: "Firewall Rules / Cloud Armor", oss: "iptables / nftables / pfSense" },
+      { name: "Web Application Firewall", desc: "Application-layer protection.", aws: "AWS WAF", azure: "Azure WAF", gcp: "Cloud Armor", oss: "ModSecurity / Coraza" },
+      { name: "DDoS Protection", desc: "Volumetric attack mitigation.", aws: "Shield", azure: "DDoS Protection", gcp: "Cloud Armor", oss: "Crowdsec / fail2ban" },
+      { name: "Certificate Management", desc: "TLS/SSL provisioning.", aws: "ACM", azure: "Key Vault Certificates", gcp: "Certificate Manager", oss: "cert-manager / Let's Encrypt / step-ca" }
+    ]
+  },
+  {
+    component: "Messaging & Event Streaming",
+    types: [
+      { name: "Message Queue", desc: "Point-to-point, ordered delivery.", aws: "SQS", azure: "Service Bus Queues / Storage Queues", gcp: "Pub/Sub (pull)", oss: "RabbitMQ / ActiveMQ" },
+      { name: "Pub/Sub", desc: "Fan-out to multiple subscribers.", aws: "SNS", azure: "Service Bus Topics", gcp: "Pub/Sub", oss: "NATS / Mosquitto / Redis Pub/Sub" },
+      { name: "Event Bus", desc: "Routing events between services with rules.", aws: "EventBridge", azure: "Event Grid", gcp: "Eventarc", oss: "Apache Camel / Knative Eventing" },
+      { name: "Event Streaming Platform", desc: "High-throughput, replayable log of events.", aws: "Kinesis / MSK", azure: "Event Hubs", gcp: "Pub/Sub Lite / Managed Kafka", oss: "Apache Kafka / Apache Pulsar / Redpanda" }
+    ]
+  },
+  {
+    component: "API Management",
+    types: [
+      { name: "API Gateway", desc: "Entry point for routing and auth.", aws: "API Gateway", azure: "API Management", gcp: "API Gateway / Apigee", oss: "Kong / Tyk / KrakenD" },
+      { name: "Rate Limiting / Throttling", desc: "Traffic control.", aws: "API Gateway throttling / WAF", azure: "API Management policies", gcp: "Apigee policies", oss: "NGINX / Envoy / Kong" },
+      { name: "API Catalog / Developer Portal", desc: "Discovery and documentation.", aws: "API Gateway Developer Portal", azure: "API Management Developer Portal", gcp: "Apigee Developer Portal", oss: "Backstage / SwaggerHub" }
+    ]
+  },
+  {
+    component: "Monitoring & Observability",
+    types: [
+      { name: "Metrics", desc: "Numeric time-series data.", aws: "CloudWatch Metrics", azure: "Azure Monitor Metrics", gcp: "Cloud Monitoring", oss: "Prometheus / VictoriaMetrics" },
+      { name: "Logs", desc: "Event records from systems and apps.", aws: "CloudWatch Logs", azure: "Azure Monitor Logs", gcp: "Cloud Logging", oss: "ELK / Loki / OpenSearch" },
+      { name: "Traces", desc: "Distributed request flow tracking.", aws: "X-Ray", azure: "Application Insights", gcp: "Cloud Trace", oss: "Jaeger / Zipkin / Tempo" },
+      { name: "Alerting", desc: "Threshold-based notifications.", aws: "CloudWatch Alarms", azure: "Azure Monitor Alerts", gcp: "Cloud Monitoring Alerts", oss: "Alertmanager / Grafana Alerting" },
+      { name: "Dashboards", desc: "Visualization layer.", aws: "CloudWatch Dashboards", azure: "Azure Dashboards", gcp: "Cloud Monitoring Dashboards", oss: "Grafana / Kibana" }
+    ]
+  },
+  {
+    component: "Orchestration",
+    types: [
+      { name: "Container Orchestrator", desc: "Kubernetes-style scheduling and lifecycle.", aws: "EKS", azure: "AKS", gcp: "GKE", oss: "Kubernetes / Nomad" },
+      { name: "Service Mesh", desc: "Inter-service traffic, security, observability.", aws: "VPC Lattice / ECS Service Connect", awsNote: "App Mesh retiring Sep 2026", azure: "Istio add-on for AKS", gcp: "Cloud Service Mesh", oss: "Istio / Linkerd / Consul / Cilium" },
+      { name: "Workflow Orchestrator", desc: "Long-running, multi-step process coordination.", aws: "Step Functions", azure: "Logic Apps / Durable Functions", gcp: "Workflows", oss: "Apache Airflow / Temporal / Argo Workflows" }
+    ]
+  },
+  {
+    component: "CI/CD & Infrastructure as Code",
+    types: [
+      { name: "Source Control", desc: "Version-controlled code repositories.", aws: "CodeCommit", awsNote: "Returned to GA Nov 2025", azure: "Azure Repos", gcp: "Secure Source Manager", gcpNote: "CSR closed to new customers", oss: "Git / Gitea / GitLab" },
+      { name: "Build Pipelines", desc: "Compile and test automation.", aws: "CodeBuild", azure: "Azure Pipelines", gcp: "Cloud Build", oss: "Jenkins / GitHub Actions / Drone" },
+      { name: "Deployment Pipelines", desc: "Release automation.", aws: "CodeDeploy / CodePipeline", azure: "Azure Pipelines / Deployment Manager", gcp: "Cloud Deploy", oss: "Argo CD / Flux / Spinnaker" },
+      { name: "IaC Tooling", desc: "Declarative resource provisioning.", aws: "CloudFormation / CDK", azure: "ARM / Bicep", gcp: "Deployment Manager / Config Controller", oss: "Terraform / OpenTofu / Pulumi / Ansible" },
+      { name: "Artifact Registry", desc: "Storage for builds, images, packages.", aws: "ECR / CodeArtifact", azure: "Container Registry / Artifacts", gcp: "Artifact Registry", oss: "Harbor / Nexus / JFrog Artifactory OSS" }
+    ]
+  },
+  {
+    component: "Caching",
+    types: [
+      { name: "In-Memory Cache", desc: "Fast key-value caches.", aws: "ElastiCache / MemoryDB", azure: "Azure Cache for Redis", gcp: "Memorystore", oss: "Redis / Valkey / Memcached" },
+      { name: "Edge Cache", desc: "Geographically distributed caching.", aws: "CloudFront", azure: "Front Door / CDN", gcp: "Cloud CDN", oss: "Varnish / Apache Traffic Server" },
+      { name: "Database Query Cache", desc: "Accelerates repeated queries.", aws: "RDS Proxy / DAX", azure: "Azure SQL caching", gcp: "AlloyDB columnar engine", oss: "ProxySQL / pgBouncer + cache" }
+    ]
+  },
+  {
+    component: "Backup & Disaster Recovery",
+    types: [
+      { name: "Snapshots", desc: "Point-in-time copies of data and volumes.", aws: "EBS Snapshots", azure: "Disk Snapshots", gcp: "Persistent Disk Snapshots", oss: "LVM snapshots / ZFS snapshots" },
+      { name: "Replication", desc: "Synchronous or asynchronous copies across regions.", aws: "S3 CRR / RDS Read Replicas", azure: "Geo-redundant storage / SQL Geo-Replication", gcp: "Multi-region replication / Cross-region replicas", oss: "DRBD / pg_basebackup / rsync" },
+      { name: "Failover Mechanisms", desc: "Automatic switchover to standby.", aws: "Route 53 Failover / RDS Multi-AZ", azure: "Traffic Manager / SQL Failover Groups", gcp: "Cloud DNS routing / Cloud SQL HA", oss: "Keepalived / Pacemaker / Corosync" },
+      { name: "Backup Vaults", desc: "Centralized, retention-policied backups.", aws: "AWS Backup", azure: "Azure Backup", gcp: "Backup and DR Service", oss: "Restic / BorgBackup / Velero / Bacula" }
+    ]
+  },
+  {
+    component: "Cost Management & Governance",
+    types: [
+      { name: "Billing and Cost Reporting", desc: "Spend visibility.", aws: "Cost Explorer / CUR", azure: "Cost Management", gcp: "Cloud Billing Reports", oss: "OpenCost / Kubecost" },
+      { name: "Budgets and Quotas", desc: "Limits and alerts.", aws: "AWS Budgets / Service Quotas", azure: "Cost Management Budgets", gcp: "Budgets / Quotas", oss: "OpenCost" },
+      { name: "Resource Tagging", desc: "Metadata for organization and chargeback.", aws: "Resource Tags / Tag Editor", azure: "Tags / Azure Policy", gcp: "Labels", oss: "Terraform / Crossplane labels" },
+      { name: "Policy Enforcement", desc: "Guardrails on resource use.", aws: "Service Control Policies / Config", azure: "Azure Policy / Blueprints", gcp: "Organization Policies", oss: "OPA / Kyverno / Sentinel" },
+      { name: "Organization / Account Hierarchy", desc: "Multi-account structure.", aws: "AWS Organizations", azure: "Management Groups", gcp: "Resource Manager / Folders", oss: "Crossplane / Terraform workspaces" }
+    ]
+  }
+];
+
+// ===========================================================
+// RENDER
+// ===========================================================
+const slugify = s => s.toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
+
+const escapeHtml = s => String(s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+
+function renderProvider(label, value, note, cls) {
+  return `
+    <div class="provider ${cls}" data-prov="${cls}">
+      <span class="provider-label">${label}</span>
+      <span class="provider-value">${escapeHtml(value)}${note ? `<span class="note">${escapeHtml(note)}</span>` : ""}</span>
+    </div>`;
+}
+
+function renderType(t) {
+  return `
+    <article class="type-card" data-search="${escapeHtml((t.name + " " + t.desc + " " + t.aws + " " + t.azure + " " + t.gcp + " " + t.oss).toLowerCase())}">
+      <div class="type-card-top">
+        <div class="type-meta">
+          <h3 class="type-name">${escapeHtml(t.name)}</h3>
+          <p class="type-desc">${escapeHtml(t.desc)}</p>
+        </div>
+        <div class="providers-grid">
+          ${renderProvider("AWS", t.aws, t.awsNote, "aws")}
+          ${renderProvider("Azure", t.azure, t.azureNote, "azure")}
+          ${renderProvider("GCP", t.gcp, t.gcpNote, "gcp")}
+          ${renderProvider("OSS", t.oss, t.ossNote, "oss")}
+        </div>
+      </div>
+    </article>`;
+}
+
+function renderSection(c, idx) {
+  const id = slugify(c.component);
+  const num = String(idx + 1).padStart(2, "0");
+  return `
+    <section class="component-section" id="${id}" data-component="${id}">
+      <header class="component-header">
+        <span class="component-num">${num}</span>
+        <h2 class="component-title">${escapeHtml(c.component)}</h2>
+        <span class="component-count">${c.types.length} type${c.types.length === 1 ? "" : "s"}</span>
+      </header>
+      <div class="types-grid">
+        ${c.types.map(renderType).join("")}
+      </div>
+    </section>`;
+}
+
+// Fix the layout: providers-grid must span the full type-card width
+const fixCss = document.createElement("style");
+fixCss.textContent = `
+  .type-card-top { display: block; padding: 0; }
+  .type-meta { padding: 24px 28px 20px; }
+  @media (max-width: 800px) { .type-meta { padding: 20px 22px 16px; } }
+`;
+document.head.appendChild(fixCss);
+
+document.getElementById("content").innerHTML = DATA.map(renderSection).join("");
+
+document.getElementById("tocList").innerHTML = DATA.map(c => {
+  const id = slugify(c.component);
+  return `<li><a href="#${id}" data-tocid="${id}">${escapeHtml(c.component)}</a></li>`;
+}).join("");
+
+// ===========================================================
+// SEARCH
+// ===========================================================
+const searchBox = document.getElementById("searchBox");
+searchBox.addEventListener("input", () => {
+  const q = searchBox.value.trim().toLowerCase();
+  document.querySelectorAll(".type-card").forEach(card => {
+    const haystack = card.dataset.search;
+    card.classList.toggle("hidden", q && !haystack.includes(q));
+  });
+  // hide sections with no visible cards
+  document.querySelectorAll(".component-section").forEach(s => {
+    const visibleCards = s.querySelectorAll(".type-card:not(.hidden)").length;
+    s.classList.toggle("hidden", visibleCards === 0);
+  });
+});
+
+// ===========================================================
+// FILTER PILLS
+// ===========================================================
+document.querySelectorAll(".pill").forEach(p => {
+  p.addEventListener("click", () => {
+    document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+    p.classList.add("active");
+    const f = p.dataset.filter;
+    document.querySelectorAll(".provider").forEach(prov => {
+      prov.classList.toggle("hidden", f !== "all" && prov.dataset.prov !== f);
+    });
+  });
+});
+
+// ===========================================================
+// TOC ACTIVE STATE
+// ===========================================================
+const sections = [...document.querySelectorAll(".component-section")];
+const tocLinks = [...document.querySelectorAll(".toc a")];
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocLinks.forEach(a => a.classList.toggle("active", a.dataset.tocid === id));
+    }
+  });
+}, { rootMargin: "-30% 0px -60% 0px" });
+
+sections.forEach(s => observer.observe(s));
+
+</script>
+</body>
+</html>
